@@ -1,0 +1,30 @@
+{
+  "name": "rsu-tracker-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1",
+    "better-sqlite3": "^11",
+    "drizzle-orm": "^0.38",
+    "hono": "^4",
+    "nanoid": "^5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["better-sqlite3"]
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7",
+    "@types/node": "^22",
+    "drizzle-kit": "^0.30",
+    "tsx": "^4",
+    "typescript": "^5.7"
+  }
+}
