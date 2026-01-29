@@ -1,6 +1,8 @@
 # RSU Tracker
 
-> **⚠️ Disclaimer**: This application was fully vibe-coded by Claude Opus 4.5. Use at your own risk — no warranty is provided for correctness of calculations or tax compliance. That said, best effort has been made to present all data in a way that makes it easy to fact-check and recognize mis-calculations or complete nonsense.
+> **⚠️ Disclaimer**: This application was fully vibe-coded by Claude Opus 4.5.
+> - Use at your own risk — no warranty is provided for correctness of calculations or tax compliance.
+> - That said, best effort has been made to present all data in a way that makes it easy to fact-check and recognize mis-calculations or complete nonsense.
 
 ## What is this?
 
