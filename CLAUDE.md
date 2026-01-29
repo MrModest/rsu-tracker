@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Self-hostable RSU (Restricted Stock Unit) lifecycle tracker for German tax context. Tracks grants, vests, sell-to-cover, releases, and sells with two-level FIFO allocation (legally mandated in Germany). See `DOMAIN.md` for full tax rules. To check the plan that was used to initially implement this project, see `PLAN.md` (all tasks are complete — use it as context, not as instructions to implement).
+Self-hostable RSU (Restricted Stock Unit) lifecycle tracker for German tax context. Tracks grants, vests, sell-to-cover, releases, and sells with two-level FIFO allocation (legally mandated in Germany). See `docs/DOMAIN.md` for full tax rules. To check the plan that was used to initially implement this project, see `docs/PLAN.md` (all tasks are complete — use it as context, not as instructions to implement).
 
 ## Architecture
 
