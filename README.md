@@ -44,6 +44,10 @@ Access at `http://localhost:3000`
 
 Data persists in `./backend/data/rsu.db`
 
+> [!TIP]
+> If you want to quickly play around with dummy data, you can download an [export file](docs/dummy-data.json) and import it into your instance.
+> Once you finished, you can just remove the sqlite db file and start over.
+
 ### Local Development
 
 Requires Node.js and pnpm.
