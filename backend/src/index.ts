@@ -15,6 +15,7 @@ import releasesRoutes from './routes/releases.js';
 import sellsRoutes from './routes/sells.js';
 import settingsRoutes from './routes/settings.js';
 import insightsRoutes from './routes/insights.js';
+import dataRoutes from './routes/data.js';
 
 const app = new Hono();
 
@@ -31,6 +32,7 @@ app.route('/api/releases', releasesRoutes);
 app.route('/api/sells', sellsRoutes);
 app.route('/api/settings', settingsRoutes);
 app.route('/api/insights', insightsRoutes);
+app.route('/api/data', dataRoutes);
 
 const port = parseInt(process.env.PORT || '3001', 10);
 

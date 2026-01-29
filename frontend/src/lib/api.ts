@@ -74,4 +74,35 @@ export const api = {
   getSettings: () => request<Record<string, string>>('/settings'),
   updateSettings: (data: Record<string, string>) =>
     request<Record<string, string>>('/settings', { method: 'PUT', body: JSON.stringify(data) }),
+
+  // Data export/import
+  exportData: async () => {
+    const data = await request<Record<string, unknown>>('/data/export');
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rsu-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+  importData: (file: File): Promise<{ success: boolean }> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const data = JSON.parse(reader.result as string);
+          const result = await request<{ success: boolean }>('/data/import', {
+            method: 'POST',
+            body: JSON.stringify(data),
+          });
+          resolve(result);
+        } catch (err) {
+          reject(err);
+        }
+      };
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsText(file);
+    });
+  },
 };
