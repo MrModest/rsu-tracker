@@ -11,10 +11,10 @@ export function PortfolioSummary({ data, currency }: Props) {
   const cards = [
     { label: 'Granted', value: formatNumber(data.totalGranted, 0), sub: 'shares' },
     { label: 'Vested', value: formatNumber(data.totalVested, 0), sub: 'shares' },
-    { label: 'Currently Held', value: formatNumber(data.currentlyHeld, 0), sub: 'shares' },
-    { label: 'Unrealized Value', value: formatCurrency(data.unrealizedValue, currency), sub: data.latestPrice ? `@ ${formatCurrency(data.latestPrice, currency)}` : '' },
-    { label: 'Sold for Tax', value: formatNumber(data.totalSoldForTax, 0), sub: 'shares' },
-    { label: 'Total Fees', value: formatCurrency(data.totalFeesPaid, currency), sub: '' },
+    { label: 'Shares You Own', value: formatNumber(data.currentlyHeld, 0), sub: 'shares' },
+    { label: 'Current Value', value: formatCurrency(data.unrealizedValue, currency), sub: data.latestPrice ? `@ ${formatCurrency(data.latestPrice, currency)}` : '' },
+    { label: 'Sold for Tax', value: formatNumber(data.totalSoldForTax, 0), sub: 'by employer' },
+    { label: 'Broker Fees', value: formatCurrency(data.totalFeesPaid, currency), sub: '' },
   ];
 
   return (
