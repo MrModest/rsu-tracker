@@ -1,0 +1,429 @@
+{
+  "version": 1,
+  "exportedAt": "2026-01-29T22:40:08.278Z",
+  "grants": [
+    {
+      "id": "grant_001",
+      "name": "Initial Grant 2022",
+      "date": "2022-03-15",
+      "shareAmount": 400,
+      "unitPrice": 145.5,
+      "notes": "New hire equity grant",
+      "createdAt": "2022-03-15T10:00:00.000Z"
+    },
+    {
+      "id": "grant_002",
+      "name": "Annual Refresh 2023",
+      "date": "2023-02-01",
+      "shareAmount": 200,
+      "unitPrice": 158.75,
+      "notes": "Annual performance refresh",
+      "createdAt": "2023-02-01T10:00:00.000Z"
+    },
+    {
+      "id": "grant_003",
+      "name": "Promotion Grant 2023",
+      "date": "2023-07-01",
+      "shareAmount": 150,
+      "unitPrice": 172.3,
+      "notes": "Senior promotion equity",
+      "createdAt": "2023-07-01T10:00:00.000Z"
+    },
+    {
+      "id": "grant_004",
+      "name": "Annual Refresh 2024",
+      "date": "2024-02-01",
+      "shareAmount": 250,
+      "unitPrice": 185.4,
+      "notes": "2024 performance refresh",
+      "createdAt": "2024-02-01T10:00:00.000Z"
+    }
+  ],
+  "vests": [
+    {
+      "id": "vest_001",
+      "date": "2023-03-15",
+      "shareAmount": 100,
+      "unitPrice": 162.25,
+      "isCliff": 1,
+      "notes": "1-year cliff from Initial Grant 2022",
+      "createdAt": "2023-03-15T10:00:00.000Z"
+    },
+    {
+      "id": "vest_002",
+      "date": "2023-06-15",
+      "shareAmount": 75,
+      "unitPrice": 168.5,
+      "isCliff": 0,
+      "notes": "Q2 quarterly vest from Initial Grant 2022",
+      "createdAt": "2023-06-15T10:00:00.000Z"
+    },
+    {
+      "id": "vest_003",
+      "date": "2023-09-15",
+      "shareAmount": 75,
+      "unitPrice": 174.8,
+      "isCliff": 0,
+      "notes": "Q3 quarterly vest from Initial Grant 2022",
+      "createdAt": "2023-09-15T10:00:00.000Z"
+    },
+    {
+      "id": "vest_004",
+      "date": "2023-12-15",
+      "shareAmount": 75,
+      "unitPrice": 181.2,
+      "isCliff": 0,
+      "notes": "Q4 quarterly vest from Initial Grant 2022",
+      "createdAt": "2023-12-15T10:00:00.000Z"
+    },
+    {
+      "id": "vest_005",
+      "date": "2024-02-01",
+      "shareAmount": 50,
+      "unitPrice": 183.6,
+      "isCliff": 1,
+      "notes": "1-year cliff from Annual Refresh 2023",
+      "createdAt": "2024-02-01T10:00:00.000Z"
+    },
+    {
+      "id": "vest_006",
+      "date": "2024-03-15",
+      "shareAmount": 75,
+      "unitPrice": 186.9,
+      "isCliff": 0,
+      "notes": "Q1 quarterly vest from Initial Grant 2022",
+      "createdAt": "2024-03-15T10:00:00.000Z"
+    },
+    {
+      "id": "vest_007",
+      "date": "2024-05-01",
+      "shareAmount": 37.5,
+      "unitPrice": 192.4,
+      "isCliff": 0,
+      "notes": "Q1 quarterly vest from Annual Refresh 2023",
+      "createdAt": "2024-05-01T10:00:00.000Z"
+    },
+    {
+      "id": "vest_008",
+      "date": "2024-07-01",
+      "shareAmount": 37.5,
+      "unitPrice": 197.25,
+      "isCliff": 1,
+      "notes": "1-year cliff from Promotion Grant 2023",
+      "createdAt": "2024-07-01T10:00:00.000Z"
+    },
+    {
+      "id": "vest_009",
+      "date": "2024-08-01",
+      "shareAmount": 37.5,
+      "unitPrice": 201.8,
+      "isCliff": 0,
+      "notes": "Q2 quarterly vest from Annual Refresh 2023",
+      "createdAt": "2024-08-01T10:00:00.000Z"
+    },
+    {
+      "id": "vest_010",
+      "date": "2024-10-01",
+      "shareAmount": 37.5,
+      "unitPrice": 208.5,
+      "isCliff": 0,
+      "notes": "Q1 quarterly vest from Promotion Grant 2023",
+      "createdAt": "2024-10-01T10:00:00.000Z"
+    },
+    {
+      "id": "vest_011",
+      "date": "2024-11-01",
+      "shareAmount": 37.5,
+      "unitPrice": 213.75,
+      "isCliff": 0,
+      "notes": "Q3 quarterly vest from Annual Refresh 2023",
+      "createdAt": "2024-11-01T10:00:00.000Z"
+    }
+  ],
+  "sellForTax": [
+    {
+      "id": "sft_001",
+      "vestId": "vest_001",
+      "date": "2023-03-15",
+      "shareAmount": 42,
+      "unitPrice": 162.25,
+      "fee": 8.5,
+      "notes": "Tax withholding for cliff vest",
+      "createdAt": "2023-03-15T10:30:00.000Z"
+    },
+    {
+      "id": "sft_002",
+      "vestId": "vest_002",
+      "date": "2023-06-15",
+      "shareAmount": 32,
+      "unitPrice": 168.5,
+      "fee": 6.75,
+      "notes": "Tax withholding for Q2 vest",
+      "createdAt": "2023-06-15T10:30:00.000Z"
+    },
+    {
+      "id": "sft_003",
+      "vestId": "vest_003",
+      "date": "2023-09-15",
+      "shareAmount": 31,
+      "unitPrice": 174.8,
+      "fee": 6.5,
+      "notes": "Tax withholding for Q3 vest",
+      "createdAt": "2023-09-15T10:30:00.000Z"
+    },
+    {
+      "id": "sft_004",
+      "vestId": "vest_004",
+      "date": "2023-12-15",
+      "shareAmount": 30,
+      "unitPrice": 181.2,
+      "fee": 6.25,
+      "notes": "Tax withholding for Q4 vest",
+      "createdAt": "2023-12-15T10:30:00.000Z"
+    },
+    {
+      "id": "sft_005",
+      "vestId": "vest_005",
+      "date": "2024-02-01",
+      "shareAmount": 21,
+      "unitPrice": 183.6,
+      "fee": 5.5,
+      "notes": "Tax withholding for 2023 refresh cliff",
+      "createdAt": "2024-02-01T10:30:00.000Z"
+    },
+    {
+      "id": "sft_006",
+      "vestId": "vest_006",
+      "date": "2024-03-15",
+      "shareAmount": 30,
+      "unitPrice": 186.9,
+      "fee": 6.25,
+      "notes": "Tax withholding for Q1 2024 vest",
+      "createdAt": "2024-03-15T10:30:00.000Z"
+    },
+    {
+      "id": "sft_007",
+      "vestId": "vest_007",
+      "date": "2024-05-01",
+      "shareAmount": 16,
+      "unitPrice": 192.4,
+      "fee": 4.5,
+      "notes": "Tax withholding",
+      "createdAt": "2024-05-01T10:30:00.000Z"
+    },
+    {
+      "id": "sft_008",
+      "vestId": "vest_008",
+      "date": "2024-07-01",
+      "shareAmount": 16,
+      "unitPrice": 197.25,
+      "fee": 4.5,
+      "notes": "Tax withholding for promotion grant cliff",
+      "createdAt": "2024-07-01T10:30:00.000Z"
+    },
+    {
+      "id": "sft_009",
+      "vestId": "vest_009",
+      "date": "2024-08-01",
+      "shareAmount": 15,
+      "unitPrice": 201.8,
+      "fee": 4.25,
+      "notes": "Tax withholding",
+      "createdAt": "2024-08-01T10:30:00.000Z"
+    },
+    {
+      "id": "sft_010",
+      "vestId": "vest_010",
+      "date": "2024-10-01",
+      "shareAmount": 15,
+      "unitPrice": 208.5,
+      "fee": 4.25,
+      "notes": "Tax withholding",
+      "createdAt": "2024-10-01T10:30:00.000Z"
+    },
+    {
+      "id": "sft_011",
+      "vestId": "vest_011",
+      "date": "2024-11-01",
+      "shareAmount": 15,
+      "unitPrice": 213.75,
+      "fee": 4.25,
+      "notes": "Tax withholding",
+      "createdAt": "2024-11-01T10:30:00.000Z"
+    }
+  ],
+  "taxCashReturns": [
+    {
+      "id": "tcr_001",
+      "vestId": "vest_001",
+      "date": "2024-05-20",
+      "amount": 425.8,
+      "notes": "Tax return for 2023 cliff vest",
+      "createdAt": "2024-05-20T10:00:00.000Z"
+    },
+    {
+      "id": "tcr_002",
+      "vestId": "vest_002",
+      "date": "2024-05-20",
+      "amount": 318.5,
+      "notes": "Tax return for Q2 2023 vest",
+      "createdAt": "2024-05-20T10:00:00.000Z"
+    },
+    {
+      "id": "tcr_003",
+      "vestId": "vest_003",
+      "date": "2024-05-20",
+      "amount": 295.75,
+      "notes": "Tax return for Q3 2023 vest",
+      "createdAt": "2024-05-20T10:00:00.000Z"
+    },
+    {
+      "id": "tcr_004",
+      "vestId": "vest_004",
+      "date": "2024-05-20",
+      "amount": 287.3,
+      "notes": "Tax return for Q4 2023 vest",
+      "createdAt": "2024-05-20T10:00:00.000Z"
+    }
+  ],
+  "releases": [
+    {
+      "id": "rel_001",
+      "vestId": "vest_001",
+      "date": "2023-03-15",
+      "shareAmount": 58,
+      "unitPrice": 162.25,
+      "notes": "Shares released to broker after cliff vest",
+      "createdAt": "2023-03-15T11:00:00.000Z"
+    },
+    {
+      "id": "rel_002",
+      "vestId": "vest_002",
+      "date": "2023-06-15",
+      "shareAmount": 43,
+      "unitPrice": 168.5,
+      "notes": "Shares released to broker",
+      "createdAt": "2023-06-15T11:00:00.000Z"
+    },
+    {
+      "id": "rel_003",
+      "vestId": "vest_003",
+      "date": "2023-09-15",
+      "shareAmount": 44,
+      "unitPrice": 174.8,
+      "notes": "Shares released to broker",
+      "createdAt": "2023-09-15T11:00:00.000Z"
+    },
+    {
+      "id": "rel_004",
+      "vestId": "vest_004",
+      "date": "2023-12-15",
+      "shareAmount": 45,
+      "unitPrice": 181.2,
+      "notes": "Shares released to broker",
+      "createdAt": "2023-12-15T11:00:00.000Z"
+    },
+    {
+      "id": "rel_005",
+      "vestId": "vest_005",
+      "date": "2024-02-01",
+      "shareAmount": 29,
+      "unitPrice": 183.6,
+      "notes": "Shares released to broker",
+      "createdAt": "2024-02-01T11:00:00.000Z"
+    },
+    {
+      "id": "rel_006",
+      "vestId": "vest_006",
+      "date": "2024-03-15",
+      "shareAmount": 45,
+      "unitPrice": 186.9,
+      "notes": "Shares released to broker",
+      "createdAt": "2024-03-15T11:00:00.000Z"
+    },
+    {
+      "id": "rel_007",
+      "vestId": "vest_007",
+      "date": "2024-05-01",
+      "shareAmount": 21.5,
+      "unitPrice": 192.4,
+      "notes": "Shares released to broker",
+      "createdAt": "2024-05-01T11:00:00.000Z"
+    },
+    {
+      "id": "rel_008",
+      "vestId": "vest_008",
+      "date": "2024-07-01",
+      "shareAmount": 21.5,
+      "unitPrice": 197.25,
+      "notes": "Shares released to broker",
+      "createdAt": "2024-07-01T11:00:00.000Z"
+    },
+    {
+      "id": "rel_009",
+      "vestId": "vest_009",
+      "date": "2024-08-01",
+      "shareAmount": 22.5,
+      "unitPrice": 201.8,
+      "notes": "Shares released to broker",
+      "createdAt": "2024-08-01T11:00:00.000Z"
+    },
+    {
+      "id": "rel_010",
+      "vestId": "vest_010",
+      "date": "2024-10-01",
+      "shareAmount": 22.5,
+      "unitPrice": 208.5,
+      "notes": "Shares released to broker",
+      "createdAt": "2024-10-01T11:00:00.000Z"
+    },
+    {
+      "id": "rel_011",
+      "vestId": "vest_011",
+      "date": "2024-11-01",
+      "shareAmount": 22.5,
+      "unitPrice": 213.75,
+      "notes": "Shares released to broker",
+      "createdAt": "2024-11-01T11:00:00.000Z"
+    }
+  ],
+  "sells": [
+    {
+      "id": "sell_001",
+      "date": "2023-08-10",
+      "shareAmount": 50,
+      "unitPrice": 171.35,
+      "fee": 12.5,
+      "notes": "Partial sell to cover personal expenses",
+      "createdAt": "2023-08-10T14:00:00.000Z"
+    },
+    {
+      "id": "sell_002",
+      "date": "2024-01-15",
+      "shareAmount": 75,
+      "unitPrice": 182.9,
+      "fee": 15.75,
+      "notes": "Year-end sell for tax payment",
+      "createdAt": "2024-01-15T14:00:00.000Z"
+    },
+    {
+      "id": "sell_003",
+      "date": "2024-06-20",
+      "shareAmount": 40,
+      "unitPrice": 195.6,
+      "fee": 10.25,
+      "notes": "Mid-year liquidation",
+      "createdAt": "2024-06-20T14:00:00.000Z"
+    },
+    {
+      "id": "sell_004",
+      "date": "2024-09-25",
+      "shareAmount": 30,
+      "unitPrice": 205.4,
+      "fee": 8.5,
+      "notes": "Q3 portfolio rebalancing",
+      "createdAt": "2024-09-25T14:00:00.000Z"
+    }
+  ],
+  "settings": []
+}

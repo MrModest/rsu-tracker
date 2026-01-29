@@ -21,6 +21,17 @@ Implements two-level FIFO allocation (legally mandated in Germany):
 
 Provides insights into portfolio value, capital gains, tax withholding accuracy, and lot tracking.
 
+## Screenshots
+
+> [!IMPORTANT]
+> All data provided on screenshots are dummy generated data
+
+![](docs/screenshots/1.png)
+![](docs/screenshots/2.png)
+![](docs/screenshots/3.png)
+
+> More screenshots [here](docs/screenshots)
+
 ## Quick Start
 
 ### Docker (Recommended)
