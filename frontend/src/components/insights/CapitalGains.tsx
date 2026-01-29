@@ -37,7 +37,7 @@ export function CapitalGains({ sellAllocations, currency }: Props) {
                 <TableCell className="text-right">{formatCurrency(la.costBasis, currency)}</TableCell>
                 <TableCell className="text-right">{formatCurrency(sa.unitPrice, currency)}</TableCell>
                 <TableCell className="text-right">{formatCurrency(la.proratedFee, currency)}</TableCell>
-                <TableCell className={`text-right ${la.gain >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <TableCell className={`text-right ${la.gain >= 0 ? 'text-primary' : 'text-destructive'}`}>
                   {formatCurrency(la.gain, currency)}
                 </TableCell>
               </TableRow>
@@ -45,7 +45,7 @@ export function CapitalGains({ sellAllocations, currency }: Props) {
           )}
           <TableRow className="font-bold">
             <TableCell colSpan={6} className="text-right">Total</TableCell>
-            <TableCell className={`text-right ${totalGains >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <TableCell className={`text-right ${totalGains >= 0 ? 'text-primary' : 'text-destructive'}`}>
               {formatCurrency(totalGains, currency)}
             </TableCell>
           </TableRow>

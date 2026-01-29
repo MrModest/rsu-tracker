@@ -36,7 +36,7 @@ export function LotTracker({ lots, currency, latestPrice }: Props) {
                 <TableCell className="text-right">{formatCurrency(lot.costBasis, currency)}</TableCell>
                 {latestPrice && <TableCell className="text-right">{formatCurrency(latestPrice * lot.remainingShares, currency)}</TableCell>}
                 {latestPrice && (
-                  <TableCell className={`text-right ${unrealizedGain >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <TableCell className={`text-right ${unrealizedGain >= 0 ? 'text-primary' : 'text-destructive'}`}>
                     {formatCurrency(unrealizedGain, currency)}
                   </TableCell>
                 )}
