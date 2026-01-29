@@ -35,7 +35,7 @@ function getDetails(item: TimelineItem, currency: string): string {
     case 'grant':
       return `${formatNumber(item.data.shareAmount, 0)} shares @ ${formatCurrency(item.data.unitPrice, currency)} — "${item.data.name}"`;
     case 'vest':
-      return `${formatNumber(item.data.shareAmount, 0)} shares @ ${formatCurrency(item.data.unitPrice, currency)}${item.data.isCliff ? ' (cliff)' : ''}`;
+      return `${formatNumber(item.data.shareAmount, 0)} shares${item.data.unitPrice != null ? ` @ ${formatCurrency(item.data.unitPrice, currency)}` : ''}${item.data.isCliff ? ' (cliff)' : ''}`;
     case 'sell_for_tax':
       return `${formatNumber(item.data.shareAmount, 0)} shares @ ${formatCurrency(item.data.unitPrice, currency)}${item.data.fee ? ` (fee: ${formatCurrency(item.data.fee, currency)})` : ''}`;
     case 'tax_cash_return':

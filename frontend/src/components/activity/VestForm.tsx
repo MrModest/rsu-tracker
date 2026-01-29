@@ -23,7 +23,7 @@ export function VestForm({ initial, onSubmit, onCancel }: Props) {
     onSubmit({
       date,
       shareAmount: parseFloat(shareAmount),
-      unitPrice: parseFloat(unitPrice),
+      unitPrice: unitPrice ? parseFloat(unitPrice) : null,
       isCliff,
       notes,
     });
@@ -42,7 +42,7 @@ export function VestForm({ initial, onSubmit, onCancel }: Props) {
         </div>
         <div className="space-y-2">
           <Label htmlFor="unitPrice">FMV (Unit Price)</Label>
-          <Input id="unitPrice" type="number" step="any" value={unitPrice} onChange={(e) => setUnitPrice(e.target.value)} required />
+          <Input id="unitPrice" type="number" step="any" value={unitPrice} onChange={(e) => setUnitPrice(e.target.value)} placeholder="Optional" />
         </div>
       </div>
       <div className="flex items-center gap-2">

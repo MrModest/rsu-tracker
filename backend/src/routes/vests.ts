@@ -37,7 +37,7 @@ app.post('/', async (c) => {
     id: nanoid(),
     date: body.date,
     shareAmount: body.shareAmount,
-    unitPrice: body.unitPrice,
+    unitPrice: body.unitPrice ?? null,
     isCliff: body.isCliff ? 1 : 0,
     notes: body.notes || '',
     createdAt: new Date().toISOString(),
@@ -64,7 +64,7 @@ app.put('/:id', async (c) => {
     .set({
       date: body.date,
       shareAmount: body.shareAmount,
-      unitPrice: body.unitPrice,
+      unitPrice: body.unitPrice ?? null,
       isCliff: body.isCliff ? 1 : 0,
       notes: body.notes ?? '',
     })

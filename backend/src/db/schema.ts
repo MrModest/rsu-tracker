@@ -14,7 +14,7 @@ export const vests = sqliteTable('vests', {
   id: text('id').primaryKey(),
   date: text('date').notNull(),
   shareAmount: real('share_amount').notNull(),
-  unitPrice: real('unit_price').notNull(),
+  unitPrice: real('unit_price'),
   isCliff: integer('is_cliff').notNull().default(0),
   notes: text('notes').notNull().default(''),
   createdAt: text('created_at').notNull(),

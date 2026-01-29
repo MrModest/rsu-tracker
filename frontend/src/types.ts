@@ -14,7 +14,7 @@ export interface Vest {
   id: string;
   date: string;
   shareAmount: number;
-  unitPrice: number;
+  unitPrice: number | null;
   isCliff: boolean;
   notes: string;
   createdAt: string;
@@ -132,7 +132,7 @@ export interface TaxWithholdingSummary {
   vestId: string;
   vestDate: string;
   sharesVested: number;
-  vestUnitPrice: number;
+  vestUnitPrice: number | null;
   sharesSoldForTax: number;
   taxProceeds: number;
   sellForTaxFee: number;

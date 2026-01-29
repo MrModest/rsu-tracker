@@ -18,8 +18,8 @@ Restricted Stock Units (RSUs) are a form of equity compensation where a company 
 | Type | share_amount | unit_price | total_amount | vest_event_id | grant_name |
 |------|-------------|------------|--------------|---------------|------------|
 | `grant` | Total promised shares | Stock price at grant date | share_amount × unit_price | null | Required (e.g. "2024 Annual") |
-| `vest` | Shares vesting | FMV at vest date | share_amount × unit_price | null | Optional (informational) |
-| `cliff` | Shares vesting (first vest) | FMV at vest date | share_amount × unit_price | null | Optional (informational) |
+| `vest` | Shares vesting | FMV at vest date (optional) | share_amount × unit_price | null | Optional (informational) |
+| `cliff` | Shares vesting (first vest) | FMV at vest date (optional) | share_amount × unit_price | null | Optional (informational) |
 | `sell_for_tax` | Shares sold for tax | Market price at sale | share_amount × unit_price | FK → vest/cliff event | Optional |
 | `tax_cash_return` | 0 | 0 | Cash amount returned | FK → vest/cliff event | Optional |
 | `release` | Shares released to brokerage | Cost basis price (defaults to sell_for_tax price) | share_amount × unit_price | FK → vest/cliff event | Optional |
@@ -126,11 +126,12 @@ Broker fees apply only to the two event types that involve actual market transac
 ## Insight Calculations
 
 ### Promised vs Factual (per grant_name)
-Compares the "paper value" at grant time vs actual value at vest time:
-- **Promised value** = grant_price × number_of_shares_vested
-- **Factual value** = vest_price × number_of_shares_vested
-- **Difference** = factual − promised (positive = stock appreciated between grant and vest)
+Compares the "paper value" at grant time vs actual value at release time:
+- **Promised value** = grant_price × number_of_shares_released
+- **Factual value** = release_price × number_of_shares_released
+- **Difference** = factual − promised (positive = stock appreciated between grant and release)
 - Grouped by grant_name, using FIFO to determine which grants fed each vest
+- Only vests with a linked release event are included
 
 ### Capital Gains (per sell event)
 For each sell event:
@@ -145,7 +146,7 @@ For each vest/cliff event, aggregate its linked events:
 - Tax proceeds (sell_for_tax total_amount)
 - Cash returned (tax_cash_return total_amount)
 - Net tax paid = tax_proceeds − cash_returned
-- Effective tax rate = net_tax_paid / (vest unit_price × shares_vested)
+- Effective tax rate = net_tax_paid / (vest unit_price × shares_vested) — falls back to sell_for_tax price if vest price not provided
 
 ### Portfolio Overview
 - **Granted**: SUM(share_amount) where type='grant'
