@@ -35,14 +35,14 @@ function ReleaseTaxCard({ summary: s, currency }: { summary: TaxWithholdingSumma
     <Card>
       <CardContent className="space-y-3">
         <div className="space-y-1">
-          <p className="font-medium">
+          <p className="font-medium text-base">
             {formatNumber(s.totalShares, 0)} shares vested on {s.vestDate}
           </p>
           <p className="text-sm text-muted-foreground">
             Settlement date: {s.settlementDate}
           </p>
           <p className="text-sm text-muted-foreground">
-            Release price (FMV, 30-day avg): {formatCurrency(s.releasePrice, currency)}
+            Release price (FMV): {formatCurrency(s.releasePrice, currency)}
           </p>
           <p className="text-sm text-muted-foreground">
             Vest value: {formatNumber(s.totalShares, 0)} × {formatCurrency(s.releasePrice, currency)} = {formatCurrency(vestValue, currency)}
