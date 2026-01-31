@@ -28,7 +28,7 @@ export function StocksVsCash({ data, currency }: Props) {
       <div className="md:hidden space-y-3">
         {data.map((d) => (
           <Card key={d.grantName}>
-            <CardContent className="pt-4 space-y-2">
+            <CardContent className="space-y-2">
               <div className="font-medium text-base">{d.grantName}</div>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
@@ -58,7 +58,7 @@ export function StocksVsCash({ data, currency }: Props) {
           </Card>
         ))}
         <Card>
-          <CardContent className="pt-4">
+          <CardContent>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between font-medium">
                 <span>Total Promised:</span>

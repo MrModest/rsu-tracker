@@ -19,7 +19,7 @@ export function GrantsSummary({ grants, currency }: Props) {
       <div className="md:hidden space-y-3">
         {grants.map((g) => (
           <Card key={g.id}>
-            <CardContent className="pt-4 space-y-2">
+            <CardContent className="space-y-2">
               <div className="font-medium text-base">{g.name}</div>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>

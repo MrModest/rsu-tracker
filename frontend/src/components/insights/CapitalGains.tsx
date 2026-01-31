@@ -79,7 +79,7 @@ function SellCard({ sell, currency }: { sell: SellAllocation; currency: string }
 
   return (
     <Card>
-      <CardContent className="pt-4 md:pt-5 space-y-3">
+      <CardContent className="space-y-3">
         <div className="space-y-1">
           <p className="font-medium">
             Sold {formatNumber(sell.totalShares, 0)} shares on {sell.sellDate}

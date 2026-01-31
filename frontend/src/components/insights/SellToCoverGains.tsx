@@ -28,7 +28,7 @@ export function SellToCoverGains({ gains, currency }: Props) {
       <div className="md:hidden space-y-3">
         {gains.map((g) => (
           <Card key={g.releaseEventId}>
-            <CardContent className="pt-4 space-y-2">
+            <CardContent className="space-y-2">
               <div className="font-medium">{g.settlementDate}</div>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
@@ -54,7 +54,7 @@ export function SellToCoverGains({ gains, currency }: Props) {
           </Card>
         ))}
         <Card>
-          <CardContent className="pt-4">
+          <CardContent>
             <div className="flex justify-between items-center">
               <div className="font-medium">Total:</div>
               <div className={`font-bold ${totalGain >= 0 ? 'text-green-600' : 'text-red-600'}`}>

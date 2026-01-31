@@ -36,7 +36,7 @@ export function LotTracker({ lots, currency, latestPrice }: Props) {
           const gainIfSold = latestPrice ? (latestPrice - lot.costBasis) * lot.remainingShares : null;
           return (
             <Card key={lot.releaseEventId}>
-              <CardContent className="pt-4 space-y-2">
+              <CardContent className="space-y-2">
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
                     <div className="text-muted-foreground">Settlement Date</div>
@@ -79,7 +79,7 @@ export function LotTracker({ lots, currency, latestPrice }: Props) {
         })}
         {latestPrice && (
           <Card>
-            <CardContent className="pt-4">
+            <CardContent>
               <div className="grid grid-cols-2 gap-3 text-sm font-medium">
                 <div>
                   <div className="text-muted-foreground font-normal">Total Shares</div>

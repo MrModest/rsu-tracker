@@ -33,7 +33,7 @@ function ReleaseTaxCard({ summary: s, currency }: { summary: TaxWithholdingSumma
 
   return (
     <Card>
-      <CardContent className="pt-4 md:pt-5 space-y-3">
+      <CardContent className="space-y-3">
         <div className="space-y-1">
           <p className="font-medium">
             {formatNumber(s.totalShares, 0)} shares vested on {s.vestDate}
