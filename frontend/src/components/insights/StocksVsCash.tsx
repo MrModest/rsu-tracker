@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 import type { PromisedVsFactual } from '@/types';
 
@@ -22,7 +23,65 @@ export function StocksVsCash({ data, currency }: Props) {
           Compare what your grants were worth when promised vs. what they were actually worth when shares vested. Shows whether receiving stocks instead of cash worked in your favor.
         </p>
       </div>
-      <Table>
+
+      {/* Mobile: Cards */}
+      <div className="md:hidden space-y-3">
+        {data.map((d) => (
+          <Card key={d.grantName}>
+            <CardContent className="pt-4 space-y-2">
+              <div className="font-medium text-base">{d.grantName}</div>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <div className="text-muted-foreground">Shares Vested</div>
+                  <div>{formatNumber(d.sharesVested, 0)}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Grant Price</div>
+                  <div>{formatCurrency(d.grantPrice, currency)}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Promised Value</div>
+                  <div>{formatCurrency(d.promisedValue, currency)}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Actual Value</div>
+                  <div>{formatCurrency(d.factualValue, currency)}</div>
+                </div>
+                <div className="col-span-2">
+                  <div className="text-muted-foreground">Difference</div>
+                  <div className={`font-medium ${d.difference >= 0 ? 'text-primary' : 'text-destructive'}`}>
+                    {d.difference >= 0 ? '+' : ''}{formatCurrency(d.difference, currency)}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+        <Card>
+          <CardContent className="pt-4">
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between font-medium">
+                <span>Total Promised:</span>
+                <span>{formatCurrency(totalPromised, currency)}</span>
+              </div>
+              <div className="flex justify-between font-medium">
+                <span>Total Actual:</span>
+                <span>{formatCurrency(totalFactual, currency)}</span>
+              </div>
+              <div className="flex justify-between font-bold text-base">
+                <span>Difference:</span>
+                <span className={totalDifference >= 0 ? 'text-primary' : 'text-destructive'}>
+                  {totalDifference >= 0 ? '+' : ''}{formatCurrency(totalDifference, currency)}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Desktop: Table */}
+      <div className="hidden md:block">
+        <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Grant</TableHead>
@@ -62,6 +121,8 @@ export function StocksVsCash({ data, currency }: Props) {
           </TableRow>
         </TableFooter>
       </Table>
+      </div>
+
       <div className="text-xs text-muted-foreground italic space-y-0.5">
         <p>"Promised Value" = Shares Vested × Grant Price (what you would have gotten as a cash bonus)</p>
         <p>"Actual Value" = Shares Vested × Price at Vesting (what the shares were actually worth)</p>

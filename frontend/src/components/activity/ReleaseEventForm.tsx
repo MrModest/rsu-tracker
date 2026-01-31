@@ -73,8 +73,11 @@ export function ReleaseEventForm({ initial, onSubmit, onCancel }: Props) {
 
   const handleUpdateAllocation = (index: number, shares: string) => {
     const newAllocations = [...grantAllocations];
-    newAllocations[index] = { ...newAllocations[index], shares: parseFloat(shares) || 0 };
-    setGrantAllocations(newAllocations);
+    const currentAlloc = newAllocations[index];
+    if (currentAlloc) {
+      newAllocations[index] = { grantId: currentAlloc.grantId, shares: parseFloat(shares) || 0 };
+      setGrantAllocations(newAllocations);
+    }
   };
 
   const handleRemoveAllocation = (index: number) => {
@@ -135,7 +138,7 @@ export function ReleaseEventForm({ initial, onSubmit, onCancel }: Props) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-3 rounded-lg border p-3">
         <h3 className="text-sm font-semibold">Dates</h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="vestDate">Vest Date *</Label>
             <Input
@@ -161,7 +164,7 @@ export function ReleaseEventForm({ initial, onSubmit, onCancel }: Props) {
 
       <div className="space-y-3 rounded-lg border p-3">
         <h3 className="text-sm font-semibold">Release Details</h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="totalShares">Total Shares Vested *</Label>
             <Input
@@ -197,9 +200,8 @@ export function ReleaseEventForm({ initial, onSubmit, onCancel }: Props) {
         {autoCalcError && <p className="text-sm text-red-600">{autoCalcError}</p>}
         <div className="space-y-2">
           {grantAllocations.map((alloc, index) => {
-            const grant = grants.find((g) => g.id === alloc.grantId);
             return (
-              <div key={index} className="flex items-center gap-2">
+              <div key={index} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 <select
                   className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm"
                   value={alloc.grantId}
@@ -217,23 +219,25 @@ export function ReleaseEventForm({ initial, onSubmit, onCancel }: Props) {
                     </option>
                   ))}
                 </select>
-                <Input
-                  type="number"
-                  step="any"
-                  placeholder="Shares"
-                  className="w-32"
-                  value={alloc.shares || ''}
-                  onChange={(e) => handleUpdateAllocation(index, e.target.value)}
-                  required
-                />
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => handleRemoveAllocation(index)}
-                >
-                  ✕
-                </Button>
+                <div className="flex gap-2">
+                  <Input
+                    type="number"
+                    step="any"
+                    placeholder="Shares"
+                    className="flex-1 sm:w-32"
+                    value={alloc.shares || ''}
+                    onChange={(e) => handleUpdateAllocation(index, e.target.value)}
+                    required
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleRemoveAllocation(index)}
+                  >
+                    ✕
+                  </Button>
+                </div>
               </div>
             );
           })}
@@ -248,7 +252,7 @@ export function ReleaseEventForm({ initial, onSubmit, onCancel }: Props) {
 
       <div className="space-y-3 rounded-lg border p-3">
         <h3 className="text-sm font-semibold">Sell-to-Cover *</h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="sharesSoldForTax">Shares Sold for Tax *</Label>
             <Input
@@ -272,7 +276,7 @@ export function ReleaseEventForm({ initial, onSubmit, onCancel }: Props) {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="brokerFee">Broker Fee</Label>
             <Input

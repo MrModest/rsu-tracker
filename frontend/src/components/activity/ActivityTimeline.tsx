@@ -60,13 +60,15 @@ export function ActivityTimeline({ items, currency, onEdit, onDelete }: Props) {
   return (
     <div className="space-y-2">
       {sorted.map((item) => (
-        <div key={`${item.type}-${getId(item)}`} className="flex items-center gap-3 rounded-md border p-3">
-          <span className="text-sm text-muted-foreground w-fit shrink-0">{getDate(item)}</span>
-          <div className="w-20 shrink-0 flex justify-center">
-            <Badge variant={typeBadgeVariant[item.type]}>{typeLabels[item.type]}</Badge>
+        <div key={`${item.type}-${getId(item)}`} className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-md border p-3">
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted-foreground w-fit shrink-0">{getDate(item)}</span>
+            <div className="w-20 shrink-0 flex justify-center">
+              <Badge variant={typeBadgeVariant[item.type]}>{typeLabels[item.type]}</Badge>
+            </div>
           </div>
-          <span className="text-sm flex-1">{getDetails(item, currency)}</span>
-          <div className="flex gap-1 shrink-0">
+          <span className="text-sm flex-1 break-words">{getDetails(item, currency)}</span>
+          <div className="flex gap-1 shrink-0 self-end sm:self-auto">
             <Button variant="ghost" size="icon" onClick={() => onEdit(item)}><Pencil className="h-4 w-4" /></Button>
             <Button variant="ghost" size="icon" onClick={() => onDelete(item)}><Trash2 className="h-4 w-4" /></Button>
           </div>

@@ -33,7 +33,7 @@ function ReleaseTaxCard({ summary: s, currency }: { summary: TaxWithholdingSumma
 
   return (
     <Card>
-      <CardContent className="pt-5 space-y-3">
+      <CardContent className="pt-4 md:pt-5 space-y-3">
         <div className="space-y-1">
           <p className="font-medium">
             {formatNumber(s.totalShares, 0)} shares vested on {s.vestDate}
@@ -53,7 +53,7 @@ function ReleaseTaxCard({ summary: s, currency }: { summary: TaxWithholdingSumma
 
         <div className="space-y-1">
           <p className="text-sm font-medium">Sell-to-cover transaction:</p>
-          <div className="pl-2 space-y-0.5 text-sm">
+          <div className="pl-2 space-y-0.5 text-xs md:text-sm">
             <p>
               Shares sold for tax: {formatNumber(s.sharesSoldForTax, 0)} × {formatCurrency(s.taxSalePrice, currency)} = {formatCurrency(taxProceeds, currency)}
             </p>

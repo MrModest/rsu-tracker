@@ -88,10 +88,10 @@ export function ActivityPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
         <div>
-          <h1 className="text-2xl font-bold">Activity</h1>
-          <p className="text-muted-foreground mt-1">All events timeline</p>
+          <h1 className="text-xl sm:text-2xl font-bold">Activity</h1>
+          <p className="text-sm text-muted-foreground mt-1">All events timeline</p>
         </div>
         <div className="relative" ref={typePickerRef}>
           <Button className="gap-0" onClick={() => setTypePickerOpen(!typePickerOpen)}>

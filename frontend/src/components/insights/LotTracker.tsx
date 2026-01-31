@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 import type { TaxLot } from '@/types';
 
@@ -27,7 +28,86 @@ export function LotTracker({ lots, currency, latestPrice }: Props) {
           Shares that were released to your brokerage account and you haven't sold yet.
         </p>
       </div>
-      <Table>
+
+      {/* Mobile: Cards */}
+      <div className="md:hidden space-y-3">
+        {activeLots.map((lot) => {
+          const currentValue = latestPrice ? latestPrice * lot.remainingShares : null;
+          const gainIfSold = latestPrice ? (latestPrice - lot.costBasis) * lot.remainingShares : null;
+          return (
+            <Card key={lot.releaseEventId}>
+              <CardContent className="pt-4 space-y-2">
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <div className="text-muted-foreground">Settlement Date</div>
+                    <div className="font-medium">{lot.settlementDate}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Vest Date</div>
+                    <div>{lot.vestDate}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Shares Received</div>
+                    <div>{formatNumber(lot.totalShares, 0)}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">You Still Hold</div>
+                    <div className="font-medium">{formatNumber(lot.remainingShares, 0)}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Cost Basis (FMV)</div>
+                    <div>{formatCurrency(lot.costBasis, currency)}</div>
+                  </div>
+                  {currentValue !== null && (
+                    <div>
+                      <div className="text-muted-foreground">Current Value</div>
+                      <div>{formatCurrency(currentValue, currency)}</div>
+                    </div>
+                  )}
+                  {gainIfSold !== null && (
+                    <div className="col-span-2">
+                      <div className="text-muted-foreground">If You Sold Now</div>
+                      <div className={`font-medium ${gainIfSold >= 0 ? 'text-primary' : 'text-destructive'}`}>
+                        {gainIfSold >= 0 ? '+' : ''}{formatCurrency(gainIfSold, currency)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+        {latestPrice && (
+          <Card>
+            <CardContent className="pt-4">
+              <div className="grid grid-cols-2 gap-3 text-sm font-medium">
+                <div>
+                  <div className="text-muted-foreground font-normal">Total Shares</div>
+                  <div>{formatNumber(totalRemaining, 0)}</div>
+                </div>
+                {totalCurrentValue !== null && (
+                  <div>
+                    <div className="text-muted-foreground font-normal">Total Value</div>
+                    <div>{formatCurrency(totalCurrentValue, currency)}</div>
+                  </div>
+                )}
+                {totalGainIfSold !== null && (
+                  <div className="col-span-2">
+                    <div className="text-muted-foreground font-normal">Total Gain If Sold</div>
+                    <div className={totalGainIfSold >= 0 ? 'text-primary' : 'text-destructive'}>
+                      {totalGainIfSold >= 0 ? '+' : ''}{formatCurrency(totalGainIfSold, currency)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Desktop: Table */}
+      <div className="hidden md:block">
+        <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Settlement Date</TableHead>
@@ -82,6 +162,8 @@ export function LotTracker({ lots, currency, latestPrice }: Props) {
           </TableFooter>
         )}
       </Table>
+      </div>
+
       {latestPrice && (
         <p className="text-xs text-muted-foreground italic">
           "If You Sold Now" = (Current Price &minus; Cost Basis) &times; Shares You Still Hold. Cost basis is FMV at settlement date (30-day avg).

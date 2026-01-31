@@ -28,7 +28,7 @@ function FormulaLine({ sellPrice, costBasis, shares, fee, gain, currency }: {
 }) {
   const feeStr = fee !== 0 ? ` − ${formatCurrency(fee, currency)}` : '';
   return (
-    <span className={gain >= 0 ? 'text-primary' : 'text-destructive'}>
+    <span className={`text-xs md:text-sm ${gain >= 0 ? 'text-primary' : 'text-destructive'}`}>
       ({formatCurrency(sellPrice, currency)} − {formatCurrency(costBasis, currency)}) × {formatNumber(shares, 0)}{feeStr} = {gain >= 0 ? '' : ''}{formatCurrency(gain, currency)}
     </span>
   );
@@ -52,10 +52,10 @@ export function CapitalGains({ sellAllocations, currency }: Props) {
         const yearTotal = sells.reduce((s, sa) => s + sa.totalGain, 0);
         return (
           <div key={year} className="space-y-3">
-            <div className="rounded-lg border bg-muted/50 px-4 py-2.5 flex items-center gap-2">
+            <div className="rounded-lg border bg-muted/50 px-3 md:px-4 py-2.5 flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
               <span className="text-sm font-medium">{year}</span>
-              <span className="text-sm text-muted-foreground">—</span>
-              <span className={`text-sm font-semibold ${yearTotal >= 0 ? 'text-primary' : 'text-destructive'}`}>
+              <span className="hidden md:inline text-sm text-muted-foreground">—</span>
+              <span className={`text-xs md:text-sm font-semibold ${yearTotal >= 0 ? 'text-primary' : 'text-destructive'}`}>
                 Total taxable gain: {formatCurrency(yearTotal, currency)}
               </span>
             </div>
@@ -79,7 +79,7 @@ function SellCard({ sell, currency }: { sell: SellAllocation; currency: string }
 
   return (
     <Card>
-      <CardContent className="pt-5 space-y-3">
+      <CardContent className="pt-4 md:pt-5 space-y-3">
         <div className="space-y-1">
           <p className="font-medium">
             Sold {formatNumber(sell.totalShares, 0)} shares on {sell.sellDate}
@@ -102,12 +102,12 @@ function SellCard({ sell, currency }: { sell: SellAllocation; currency: string }
           </p>
 
           {sell.lotAllocations.map((la, i) => (
-            <div key={`${la.releaseEventId}-${i}`} className="text-sm space-y-0.5 pl-2">
+            <div key={`${la.releaseEventId}-${i}`} className="text-xs md:text-sm space-y-0.5 pl-2">
               <p>
                 {multiLot && <span className="text-muted-foreground mr-1">{'\u2460'.charAt(0) && String.fromCodePoint(0x2460 + i)}</span>}
                 {formatNumber(la.shares, 0)} shares received on {la.settlementDate} at {formatCurrency(la.costBasis, currency)}
               </p>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground break-all">
                 Gain:{' '}
                 <FormulaLine
                   sellPrice={sell.unitPrice}

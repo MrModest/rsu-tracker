@@ -35,7 +35,7 @@ export function SellForm({ initial, onSubmit, onCancel }: Props) {
         <Label htmlFor="date">Sale Date</Label>
         <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid sm:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="shareAmount">Shares</Label>
           <Input id="shareAmount" type="number" step="any" value={shareAmount} onChange={(e) => setShareAmount(e.target.value)} required />

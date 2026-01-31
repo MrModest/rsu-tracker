@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PortfolioSummary } from '@/components/insights/PortfolioSummary';
 import { GrantsSummary } from '@/components/insights/GrantsSummary';
@@ -11,6 +12,7 @@ import { useGrants } from '@/hooks/use-grants';
 import { useSettings } from '@/hooks/use-settings';
 
 export function DashboardPage() {
+  const [activeTab, setActiveTab] = useState('grants');
   const { data: portfolio } = usePortfolio();
   const { data: lots } = useLots();
   const { data: capitalGains } = useCapitalGains();
@@ -25,14 +27,29 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">Portfolio overview</p>
+        <h1 className="text-xl sm:text-2xl font-bold">Dashboard</h1>
+        <p className="text-sm text-muted-foreground mt-1">Portfolio overview</p>
       </div>
 
       {portfolio && <PortfolioSummary data={portfolio} currency={currency} />}
 
-      <Tabs defaultValue="grants">
-        <TabsList>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        {/* Mobile: Dropdown */}
+        <select
+          className="md:hidden w-full rounded-md border border-input bg-background px-3 py-2 text-sm mb-4"
+          value={activeTab}
+          onChange={(e) => setActiveTab(e.target.value)}
+        >
+          <option value="grants">Grants</option>
+          <option value="lots">Your Shares</option>
+          <option value="gains">Sell History</option>
+          <option value="tax">Vesting Tax</option>
+          <option value="sell-to-cover">Sell-to-Cover</option>
+          <option value="stocks-vs-cash">Stocks vs Cash</option>
+        </select>
+
+        {/* Desktop: Tabs */}
+        <TabsList className="hidden md:flex">
           <TabsTrigger value="grants">Grants</TabsTrigger>
           <TabsTrigger value="lots">Your Shares</TabsTrigger>
           <TabsTrigger value="gains">Sell History</TabsTrigger>
@@ -40,6 +57,7 @@ export function DashboardPage() {
           <TabsTrigger value="sell-to-cover">Sell-to-Cover</TabsTrigger>
           <TabsTrigger value="stocks-vs-cash">Stocks vs Cash</TabsTrigger>
         </TabsList>
+
         <TabsContent value="grants">
           {grants && <GrantsSummary grants={grants} currency={currency} />}
         </TabsContent>

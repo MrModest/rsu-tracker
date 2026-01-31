@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 import type { SellToCoverGainSummary } from '@/types';
 
@@ -23,7 +24,50 @@ export function SellToCoverGains({ gains, currency }: Props) {
         </p>
       </div>
 
-      <Table>
+      {/* Mobile: Cards */}
+      <div className="md:hidden space-y-3">
+        {gains.map((g) => (
+          <Card key={g.releaseEventId}>
+            <CardContent className="pt-4 space-y-2">
+              <div className="font-medium">{g.settlementDate}</div>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <div className="text-muted-foreground">Shares Sold</div>
+                  <div>{formatNumber(g.sharesSold, 2)}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Cost Basis (FMV)</div>
+                  <div>{formatCurrency(g.costBasis, currency)}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Sale Price</div>
+                  <div>{formatCurrency(g.salePrice, currency)}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Capital Gain/Loss</div>
+                  <div className={`font-medium ${g.gain >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {g.gain >= 0 ? '+' : ''}{formatCurrency(g.gain, currency)}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+        <Card>
+          <CardContent className="pt-4">
+            <div className="flex justify-between items-center">
+              <div className="font-medium">Total:</div>
+              <div className={`font-bold ${totalGain >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {totalGain >= 0 ? '+' : ''}{formatCurrency(totalGain, currency)}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Desktop: Table */}
+      <div className="hidden md:block">
+        <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Settlement Date</TableHead>
@@ -55,6 +99,7 @@ export function SellToCoverGains({ gains, currency }: Props) {
           </TableRow>
         </TableFooter>
       </Table>
+      </div>
 
       {(totalLosses < 0 || totalProfits > 0) && (
         <div className="text-sm space-y-1">
