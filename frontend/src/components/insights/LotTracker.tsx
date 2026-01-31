@@ -12,7 +12,21 @@ interface Props {
 export function LotTracker({ lots, currency, latestPrice }: Props) {
   const activeLots = lots.filter((l) => l.remainingShares > 0);
 
-  if (activeLots.length === 0) return null;
+  if (activeLots.length === 0) {
+    return (
+      <div className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold">Your Shares</h2>
+          <p className="text-sm text-muted-foreground">
+            Shares that were released to your brokerage account and you haven't sold yet.
+          </p>
+        </div>
+        <p className="text-muted-foreground text-sm">
+          No shares currently held. Shares appear here after vesting events (release events) and remain until you sell them.
+        </p>
+      </div>
+    );
+  }
 
   const totalRemaining = activeLots.reduce((s, l) => s + l.remainingShares, 0);
   const totalCurrentValue = latestPrice ? activeLots.reduce((s, l) => s + latestPrice * l.remainingShares, 0) : null;
