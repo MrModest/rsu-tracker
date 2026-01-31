@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ActivityTimeline, type TimelineItem } from '@/components/activity/ActivityTimeline';
@@ -18,6 +18,7 @@ export function ActivityPage() {
   const [dialogType, setDialogType] = useState<EventType>('grant');
   const [editingItem, setEditingItem] = useState<TimelineItem | null>(null);
   const [typePickerOpen, setTypePickerOpen] = useState(false);
+  const typePickerRef = useRef<HTMLDivElement>(null);
 
   const { data: grants = [] } = useGrants();
   const { data: releaseEvents = [] } = useReleaseEvents();
@@ -41,6 +42,19 @@ export function ActivityPage() {
     ...releaseEvents.map((re) => ({ type: 'release_event' as const, data: re })),
     ...sellsList.map((s) => ({ type: 'sell' as const, data: s })),
   ];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (typePickerRef.current && !typePickerRef.current.contains(event.target as Node)) {
+        setTypePickerOpen(false);
+      }
+    };
+
+    if (typePickerOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [typePickerOpen]);
 
   const openAdd = (type: EventType) => {
     setDialogType(type);
@@ -79,7 +93,7 @@ export function ActivityPage() {
           <h1 className="text-2xl font-bold">Activity</h1>
           <p className="text-muted-foreground mt-1">All events timeline</p>
         </div>
-        <div className="relative">
+        <div className="relative" ref={typePickerRef}>
           <Button className="gap-0" onClick={() => setTypePickerOpen(!typePickerOpen)}>
             <Plus className="h-4 w-4 mr-1" /> Add Event
           </Button>
