@@ -61,11 +61,15 @@ export function ActivityTimeline({ items, currency, onEdit, onDelete }: Props) {
     <div className="space-y-2">
       {sorted.map((item) => (
         <div key={`${item.type}-${getId(item)}`} className="flex items-center gap-3 rounded-md border p-3">
-          <span className="text-sm text-muted-foreground w-24 shrink-0">{getDate(item)}</span>
-          <Badge variant={typeBadgeVariant[item.type]}>{typeLabels[item.type]}</Badge>
+          <span className="text-sm text-muted-foreground w-fit shrink-0">{getDate(item)}</span>
+          <div className="w-20 shrink-0 flex justify-center">
+            <Badge variant={typeBadgeVariant[item.type]}>{typeLabels[item.type]}</Badge>
+          </div>
           <span className="text-sm flex-1">{getDetails(item, currency)}</span>
-          <Button variant="ghost" size="icon" onClick={() => onEdit(item)}><Pencil className="h-4 w-4" /></Button>
-          <Button variant="ghost" size="icon" onClick={() => onDelete(item)}><Trash2 className="h-4 w-4" /></Button>
+          <div className="flex gap-1 shrink-0">
+            <Button variant="ghost" size="icon" onClick={() => onEdit(item)}><Pencil className="h-4 w-4" /></Button>
+            <Button variant="ghost" size="icon" onClick={() => onDelete(item)}><Trash2 className="h-4 w-4" /></Button>
+          </div>
         </div>
       ))}
     </div>
