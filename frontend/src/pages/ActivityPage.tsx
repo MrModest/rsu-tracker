@@ -80,11 +80,11 @@ export function ActivityPage() {
           <p className="text-muted-foreground mt-1">All events timeline</p>
         </div>
         <div className="relative">
-          <Button onClick={() => setTypePickerOpen(!typePickerOpen)}>
-            <Plus className="h-4 w-4 mr-2" /> Add
+          <Button className="gap-0" onClick={() => setTypePickerOpen(!typePickerOpen)}>
+            <Plus className="h-4 w-4 mr-1" /> Add Event
           </Button>
           {typePickerOpen && (
-            <div className="absolute right-0 top-full mt-1 z-10 w-48 rounded-md border bg-popover p-1 shadow-md">
+            <div className="absolute right-0 top-full mt-1 z-10 w-36 rounded-md border bg-popover p-1 shadow-md">
               {(Object.keys(typeLabels) as EventType[]).map((type) => (
                 <button key={type} onClick={() => openAdd(type)} className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm hover:bg-accent">
                   {typeLabels[type]}
