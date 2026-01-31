@@ -3,23 +3,15 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ActivityTimeline, type TimelineItem } from '@/components/activity/ActivityTimeline';
 import { GrantForm } from '@/components/activity/GrantForm';
-import { VestForm } from '@/components/activity/VestForm';
-import { SellForTaxForm } from '@/components/activity/SellForTaxForm';
-import { TaxCashReturnForm } from '@/components/activity/TaxCashReturnForm';
-import { ReleaseForm } from '@/components/activity/ReleaseForm';
+import { ReleaseEventForm } from '@/components/activity/ReleaseEventForm';
 import { SellForm } from '@/components/activity/SellForm';
 import { useGrants, useCreateGrant, useUpdateGrant, useDeleteGrant } from '@/hooks/use-grants';
-import { useVests, useCreateVest, useUpdateVest, useDeleteVest } from '@/hooks/use-vests';
-import {
-  useSellForTax, useCreateSellForTax, useUpdateSellForTax, useDeleteSellForTax,
-  useTaxCashReturns, useCreateTaxCashReturn, useUpdateTaxCashReturn, useDeleteTaxCashReturn,
-  useReleases, useCreateRelease, useUpdateRelease, useDeleteRelease,
-  useSells, useCreateSell, useUpdateSell, useDeleteSell,
-} from '@/hooks/use-sells';
+import { useReleaseEvents, useCreateReleaseEvent, useUpdateReleaseEvent, useDeleteReleaseEvent } from '@/hooks/use-release-events';
+import { useSells, useCreateSell, useUpdateSell, useDeleteSell } from '@/hooks/use-sells';
 import { useSettings } from '@/hooks/use-settings';
 import { Plus } from 'lucide-react';
 
-type EventType = 'grant' | 'vest' | 'sell_for_tax' | 'tax_cash_return' | 'release' | 'sell';
+type EventType = 'grant' | 'release_event' | 'sell';
 
 export function ActivityPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -28,10 +20,7 @@ export function ActivityPage() {
   const [typePickerOpen, setTypePickerOpen] = useState(false);
 
   const { data: grants = [] } = useGrants();
-  const { data: vests = [] } = useVests();
-  const { data: sellForTaxList = [] } = useSellForTax();
-  const { data: taxCashReturnsList = [] } = useTaxCashReturns();
-  const { data: releasesList = [] } = useReleases();
+  const { data: releaseEvents = [] } = useReleaseEvents();
   const { data: sellsList = [] } = useSells();
   const { data: settings } = useSettings();
 
@@ -40,28 +29,16 @@ export function ActivityPage() {
   const createGrant = useCreateGrant();
   const updateGrant = useUpdateGrant();
   const deleteGrant = useDeleteGrant();
-  const createVest = useCreateVest();
-  const updateVest = useUpdateVest();
-  const deleteVest = useDeleteVest();
-  const createSellForTax = useCreateSellForTax();
-  const updateSellForTax = useUpdateSellForTax();
-  const deleteSellForTax = useDeleteSellForTax();
-  const createTaxCashReturn = useCreateTaxCashReturn();
-  const updateTaxCashReturn = useUpdateTaxCashReturn();
-  const deleteTaxCashReturn = useDeleteTaxCashReturn();
-  const createRelease = useCreateRelease();
-  const updateRelease = useUpdateRelease();
-  const deleteRelease = useDeleteRelease();
+  const createReleaseEvent = useCreateReleaseEvent();
+  const updateReleaseEvent = useUpdateReleaseEvent();
+  const deleteReleaseEvent = useDeleteReleaseEvent();
   const createSell = useCreateSell();
   const updateSell = useUpdateSell();
   const deleteSell = useDeleteSell();
 
   const timelineItems: TimelineItem[] = [
     ...grants.map((g) => ({ type: 'grant' as const, data: g })),
-    ...vests.map((v) => ({ type: 'vest' as const, data: v })),
-    ...sellForTaxList.map((s) => ({ type: 'sell_for_tax' as const, data: s })),
-    ...taxCashReturnsList.map((t) => ({ type: 'tax_cash_return' as const, data: t })),
-    ...releasesList.map((r) => ({ type: 'release' as const, data: r })),
+    ...releaseEvents.map((re) => ({ type: 'release_event' as const, data: re })),
     ...sellsList.map((s) => ({ type: 'sell' as const, data: s })),
   ];
 
@@ -82,10 +59,7 @@ export function ActivityPage() {
     if (!confirm('Delete this event?')) return;
     switch (item.type) {
       case 'grant': deleteGrant.mutate(item.data.id); break;
-      case 'vest': deleteVest.mutate(item.data.id); break;
-      case 'sell_for_tax': deleteSellForTax.mutate(item.data.id); break;
-      case 'tax_cash_return': deleteTaxCashReturn.mutate(item.data.id); break;
-      case 'release': deleteRelease.mutate(item.data.id); break;
+      case 'release_event': deleteReleaseEvent.mutate(item.data.id); break;
       case 'sell': deleteSell.mutate(item.data.id); break;
     }
   };
@@ -94,10 +68,7 @@ export function ActivityPage() {
 
   const typeLabels: Record<EventType, string> = {
     grant: 'Grant',
-    vest: 'Vest',
-    sell_for_tax: 'Sell for Tax',
-    tax_cash_return: 'Tax Cash Return',
-    release: 'Release',
+    release_event: 'Release',
     sell: 'Sell',
   };
 
@@ -110,7 +81,7 @@ export function ActivityPage() {
         </div>
         <div className="relative">
           <Button onClick={() => setTypePickerOpen(!typePickerOpen)}>
-            <Plus className="h-4 w-4 mr-2" /> Add Event
+            <Plus className="h-4 w-4 mr-2" /> Add
           </Button>
           {typePickerOpen && (
             <div className="absolute right-0 top-full mt-1 z-10 w-48 rounded-md border bg-popover p-1 shadow-md">
@@ -127,7 +98,7 @@ export function ActivityPage() {
       <ActivityTimeline items={timelineItems} currency={currency} onEdit={openEdit} onDelete={handleDelete} />
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className={`max-h-[90vh] overflow-y-auto ${dialogType !== 'grant' ? 'sm:max-w-2xl' : ''}`}>
           <DialogHeader>
             <DialogTitle>{editingItem ? 'Edit' : 'Add'} {typeLabels[dialogType]}</DialogTitle>
           </DialogHeader>
@@ -141,45 +112,15 @@ export function ActivityPage() {
               onCancel={close}
             />
           )}
-          {dialogType === 'vest' && (
-            <VestForm
-              initial={editingItem?.type === 'vest' ? editingItem.data : undefined}
+          {dialogType === 'release_event' && (
+            <ReleaseEventForm
+              initial={editingItem?.type === 'release_event' ? editingItem.data : undefined}
               onSubmit={(data) => {
-                if (editingItem?.type === 'vest') updateVest.mutate({ id: editingItem.data.id, data }, { onSuccess: close });
-                else createVest.mutate(data, { onSuccess: close });
-              }}
-              onCancel={close}
-            />
-          )}
-          {dialogType === 'sell_for_tax' && (
-            <SellForTaxForm
-              initial={editingItem?.type === 'sell_for_tax' ? editingItem.data : undefined}
-              vests={vests}
-              onSubmit={(data) => {
-                if (editingItem?.type === 'sell_for_tax') updateSellForTax.mutate({ id: editingItem.data.id, data }, { onSuccess: close });
-                else createSellForTax.mutate(data, { onSuccess: close });
-              }}
-              onCancel={close}
-            />
-          )}
-          {dialogType === 'tax_cash_return' && (
-            <TaxCashReturnForm
-              initial={editingItem?.type === 'tax_cash_return' ? editingItem.data : undefined}
-              vests={vests}
-              onSubmit={(data) => {
-                if (editingItem?.type === 'tax_cash_return') updateTaxCashReturn.mutate({ id: editingItem.data.id, data }, { onSuccess: close });
-                else createTaxCashReturn.mutate(data, { onSuccess: close });
-              }}
-              onCancel={close}
-            />
-          )}
-          {dialogType === 'release' && (
-            <ReleaseForm
-              initial={editingItem?.type === 'release' ? editingItem.data : undefined}
-              vests={vests}
-              onSubmit={(data) => {
-                if (editingItem?.type === 'release') updateRelease.mutate({ id: editingItem.data.id, data }, { onSuccess: close });
-                else createRelease.mutate(data, { onSuccess: close });
+                if (editingItem?.type === 'release_event') {
+                  updateReleaseEvent.mutate({ id: editingItem.data.id, data }, { onSuccess: close });
+                } else {
+                  createReleaseEvent.mutate(data, { onSuccess: close });
+                }
               }}
               onCancel={close}
             />

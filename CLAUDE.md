@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Self-hostable RSU (Restricted Stock Unit) lifecycle tracker for German tax context. Tracks grants, vests, sell-to-cover, releases, and sells with two-level FIFO allocation (legally mandated in Germany). See `docs/DOMAIN.md` for full tax rules. To check the plan that was used to initially implement this project, see `docs/PLAN.md` (all tasks are complete — use it as context, not as instructions to implement).
+Self-hostable RSU (Restricted Stock Unit) lifecycle tracker for German tax context. Tracks grants, release events (vesting + sell-to-cover), and sells with two-level FIFO allocation (legally mandated in Germany). See `docs/DOMAIN.md` for full tax rules. To check the plan that was used to initially implement this project, see `docs/PLAN.md` (all tasks are complete — use it as context, not as instructions to implement).
 
 ## Architecture
 
@@ -16,21 +16,22 @@ Two independent projects side by side — no monorepo, no shared packages. Types
 
 ### Backend Structure
 - `src/index.ts` — Hono app entry, registers all route modules
-- `src/db/schema.ts` — Drizzle schema for 7 tables: grants, vests, sell_for_tax, tax_cash_returns, releases, sells, settings
+- `src/db/schema.ts` — Drizzle schema for 3 tables: grants, release_events, sells, settings
 - `src/db/index.ts` — DB connection + auto-creates tables on import
 - `src/routes/` — CRUD routes per entity type + insights + settings
-- `src/services/fifo.ts` — Two-level FIFO engine (vests consume grants, sells consume release lots)
-- `src/services/insights.ts` — Computed insight calculations (portfolio, lots, capital gains, tax withholding, promised vs factual)
+- `src/routes/release-events.ts` — Release event routes with auto-split logic (allocates shares to grants via FIFO)
+- `src/services/fifo.ts` — Two-level FIFO engine (release events linked to grants via FK, sells consume release events by settlementDate)
+- `src/services/insights.ts` — Computed insight calculations (portfolio, lots, capital gains, tax withholding, sell-to-cover gains, promised vs factual)
 - `src/types.ts` — Shared type definitions
 
 ### Frontend Structure
 - `src/App.tsx` — TanStack Router setup with routes: `/` (dashboard), `/activity`, `/settings`
 - `src/types.ts` — Type definitions (duplicated from backend)
 - `src/lib/api.ts` — Fetch wrapper for API calls
-- `src/hooks/` — TanStack Query hooks per entity type
+- `src/hooks/` — TanStack Query hooks per entity type (useGrants, useReleaseEvents, useSells, useInsights)
 - `src/pages/` — DashboardPage, ActivityPage, SettingsPage
-- `src/components/activity/` — Per-event-type form components + ActivityTimeline
-- `src/components/insights/` — Dashboard insight components (PortfolioSummary, GrantsSummary, LotTracker, CapitalGains, TaxWithholding)
+- `src/components/activity/` — Per-event-type form components (GrantForm, ReleaseEventForm, SellForm) + ActivityTimeline
+- `src/components/insights/` — Dashboard insight components (PortfolioSummary, GrantsSummary, LotTracker, CapitalGains, TaxWithholding, SellToCoverGains)
 - `src/components/ui/` — shadcn components
 - Path alias: `@/` maps to `./src/`
 
@@ -73,12 +74,15 @@ SQLite database path: `DATABASE_URL` env var or `./data/rsu.db` by default. Tabl
 
 ## Key Domain Concepts
 
-- **Event types**: grant → vest/cliff → sell_for_tax + tax_cash_return + release → sell
-- **Two-level FIFO**: (1) Vesting consumes from oldest grants first (2) Selling consumes from oldest release lots first
-- **FIFO allocations are computed on-the-fly**, not stored in the database
-- **vest_id FK** links sell_for_tax, tax_cash_return, and release back to their vest event
-- **Sells have no FK** — FIFO determines which release lots are consumed
-- **Fees** exist only on sell_for_tax and sells (broker transaction fees); prorated across lots for capital gains
+- **Event types**: grant → release_event (vesting + sell-to-cover) → sell
+- **Release event**: Atomic event matching broker report structure (vest date, settlement date, total shares, release price, sell-to-cover details)
+- **Two-level FIFO**: (1) Release events linked to grants via explicit FK (auto-split on creation) (2) Sells consume release events by settlementDate (oldest first)
+- **Cost basis**: releasePrice (FMV at settlement date, calculated as 30-day average XETRA closing price)
+- **Sell-to-cover is REQUIRED**: Tax withholding always happens, generates capital gain/loss if releasePrice ≠ taxSalePrice
+- **Sell-to-cover capital gain**: (taxSalePrice - releasePrice) × sharesSoldForTax - brokerFee (can be negative = loss)
+- **Grant linkage explicit**: Each release_event has grantId FK (required), system auto-splits releases across grants via FIFO
+- **Sells have no FK**: FIFO determines which release_event lots are consumed by settlementDate
+- **Fees**: Broker fees on release_events (sell-to-cover) and sells; prorated across lots for capital gains
 
 ## Conventions
 

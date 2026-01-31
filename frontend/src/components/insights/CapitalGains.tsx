@@ -68,7 +68,7 @@ export function CapitalGains({ sellAllocations, currency }: Props) {
       })}
 
       <p className="text-xs text-muted-foreground italic">
-        Gain per batch = (Sell Price − Price When Received) × Shares − Prorated Fee
+        Gain per batch = (Sell Price − Cost Basis) × Shares − Prorated Fee. Cost basis is FMV at settlement date (30-day avg).
       </p>
     </div>
   );
@@ -102,10 +102,10 @@ function SellCard({ sell, currency }: { sell: SellAllocation; currency: string }
           </p>
 
           {sell.lotAllocations.map((la, i) => (
-            <div key={`${la.releaseId}-${i}`} className="text-sm space-y-0.5 pl-2">
+            <div key={`${la.releaseEventId}-${i}`} className="text-sm space-y-0.5 pl-2">
               <p>
                 {multiLot && <span className="text-muted-foreground mr-1">{'\u2460'.charAt(0) && String.fromCodePoint(0x2460 + i)}</span>}
-                {formatNumber(la.shares, 0)} shares received on {la.releaseDate} at {formatCurrency(la.costBasis, currency)}
+                {formatNumber(la.shares, 0)} shares received on {la.settlementDate} at {formatCurrency(la.costBasis, currency)}
               </p>
               <p className="text-muted-foreground">
                 Gain:{' '}

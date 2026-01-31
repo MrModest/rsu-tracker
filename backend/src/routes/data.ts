@@ -1,19 +1,16 @@
 import { Hono } from 'hono';
 import { db } from '../db/index.js';
-import { grants, vests, sellForTax, taxCashReturns, releases, sells, settings } from '../db/schema.js';
+import { grants, releaseEvents, sells, settings } from '../db/schema.js';
 
 const app = new Hono();
 
 // GET /api/data/export
 app.get('/export', async (c) => {
   const data = {
-    version: 1,
+    version: 2,
     exportedAt: new Date().toISOString(),
     grants: await db.select().from(grants),
-    vests: await db.select().from(vests),
-    sellForTax: await db.select().from(sellForTax),
-    taxCashReturns: await db.select().from(taxCashReturns),
-    releases: await db.select().from(releases),
+    releaseEvents: await db.select().from(releaseEvents),
     sells: await db.select().from(sells),
     settings: await db.select().from(settings),
   };
@@ -24,11 +21,11 @@ app.get('/export', async (c) => {
 app.post('/import', async (c) => {
   const body = await c.req.json();
 
-  if (!body || body.version !== 1) {
-    return c.json({ error: 'Invalid export format: missing or unsupported version' }, 400);
+  if (!body || body.version !== 2) {
+    return c.json({ error: 'Invalid export format: missing or unsupported version (expected version 2)' }, 400);
   }
 
-  const requiredKeys = ['grants', 'vests', 'sellForTax', 'taxCashReturns', 'releases', 'sells', 'settings'];
+  const requiredKeys = ['grants', 'releaseEvents', 'sells', 'settings'];
   for (const key of requiredKeys) {
     if (!Array.isArray(body[key])) {
       return c.json({ error: `Invalid export format: "${key}" must be an array` }, 400);
@@ -38,20 +35,14 @@ app.post('/import', async (c) => {
   try {
     db.transaction((tx) => {
       // Delete in FK-safe order (children first)
-      tx.delete(sellForTax).run();
-      tx.delete(taxCashReturns).run();
-      tx.delete(releases).run();
       tx.delete(sells).run();
-      tx.delete(vests).run();
+      tx.delete(releaseEvents).run();
       tx.delete(grants).run();
       tx.delete(settings).run();
 
       // Insert in FK-safe order (parents first)
       if (body.grants.length) tx.insert(grants).values(body.grants).run();
-      if (body.vests.length) tx.insert(vests).values(body.vests).run();
-      if (body.sellForTax.length) tx.insert(sellForTax).values(body.sellForTax).run();
-      if (body.taxCashReturns.length) tx.insert(taxCashReturns).values(body.taxCashReturns).run();
-      if (body.releases.length) tx.insert(releases).values(body.releases).run();
+      if (body.releaseEvents.length) tx.insert(releaseEvents).values(body.releaseEvents).run();
       if (body.sells.length) tx.insert(sells).values(body.sells).run();
       if (body.settings.length) tx.insert(settings).values(body.settings).run();
     });

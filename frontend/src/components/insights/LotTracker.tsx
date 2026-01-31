@@ -30,10 +30,11 @@ export function LotTracker({ lots, currency, latestPrice }: Props) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Received On</TableHead>
+            <TableHead>Settlement Date</TableHead>
+            <TableHead>Vest Date</TableHead>
             <TableHead className="text-right">Shares Received</TableHead>
             <TableHead className="text-right">You Still Hold</TableHead>
-            <TableHead className="text-right">Price When Received</TableHead>
+            <TableHead className="text-right">Cost Basis (FMV)</TableHead>
             {latestPrice && <TableHead className="text-right">Current Value</TableHead>}
             {latestPrice && <TableHead className="text-right">If You Sold Now</TableHead>}
           </TableRow>
@@ -43,8 +44,9 @@ export function LotTracker({ lots, currency, latestPrice }: Props) {
             const currentValue = latestPrice ? latestPrice * lot.remainingShares : null;
             const gainIfSold = latestPrice ? (latestPrice - lot.costBasis) * lot.remainingShares : null;
             return (
-              <TableRow key={lot.releaseId}>
-                <TableCell>{lot.releaseDate}</TableCell>
+              <TableRow key={lot.releaseEventId}>
+                <TableCell>{lot.settlementDate}</TableCell>
+                <TableCell>{lot.vestDate}</TableCell>
                 <TableCell className="text-right">{formatNumber(lot.totalShares, 0)}</TableCell>
                 <TableCell className="text-right">{formatNumber(lot.remainingShares, 0)}</TableCell>
                 <TableCell className="text-right">{formatCurrency(lot.costBasis, currency)}</TableCell>
@@ -65,6 +67,7 @@ export function LotTracker({ lots, currency, latestPrice }: Props) {
             <TableRow>
               <TableCell />
               <TableCell />
+              <TableCell />
               <TableCell className="text-right font-bold">{formatNumber(totalRemaining, 0)}</TableCell>
               <TableCell />
               {totalCurrentValue !== null && (
@@ -81,7 +84,7 @@ export function LotTracker({ lots, currency, latestPrice }: Props) {
       </Table>
       {latestPrice && (
         <p className="text-xs text-muted-foreground italic">
-          "If You Sold Now" = (Current Price &minus; Price When Received) &times; Shares You Still Hold
+          "If You Sold Now" = (Current Price &minus; Cost Basis) &times; Shares You Still Hold. Cost basis is FMV at settlement date (30-day avg).
         </p>
       )}
     </div>

@@ -10,46 +10,38 @@ export interface Grant {
   createdAt: string;
 }
 
-export interface Vest {
-  id: string;
-  date: string;
-  shareAmount: number;
-  unitPrice: number | null;
-  isCliff: boolean;
-  notes: string;
-  createdAt: string;
-  // Linked records (populated in GET responses)
-  sellForTax?: SellForTax | null;
-  taxCashReturn?: TaxCashReturn | null;
-  release?: Release | null;
+export interface GrantAllocation {
+  grantId: string;
+  shares: number;
 }
 
-export interface SellForTax {
+export interface ReleaseEvent {
   id: string;
-  vestId: string;
-  date: string;
-  shareAmount: number;
-  unitPrice: number;
-  fee: number;
-  notes: string;
-  createdAt: string;
-}
 
-export interface TaxCashReturn {
-  id: string;
-  vestId: string;
-  date: string;
-  amount: number;
-  notes: string;
-  createdAt: string;
-}
+  // Grant allocations: which grants this release consumed from
+  grantAllocations: GrantAllocation[];
 
-export interface Release {
-  id: string;
-  vestId: string;
-  date: string;
-  shareAmount: number;
-  unitPrice: number;
+  // Dates
+  vestDate: string;
+  settlementDate: string;
+
+  // Release details
+  totalShares: number;
+  releasePrice: number;
+
+  // Sell-to-cover details (REQUIRED)
+  sharesSoldForTax: number;
+  taxSalePrice: number;
+  taxWithheld: number;
+  brokerFee: number;
+  cashReturned: number;
+
+  // Capital gain/loss on sell-to-cover (computed)
+  sellToCoverGain: number;
+
+  // Net result
+  netSharesReceived: number;
+
   notes: string;
   createdAt: string;
 }
@@ -71,10 +63,7 @@ export interface Setting {
 
 // API request types (omit id and createdAt)
 export type CreateGrant = Omit<Grant, 'id' | 'createdAt'>;
-export type CreateVest = Omit<Vest, 'id' | 'createdAt' | 'sellForTax' | 'taxCashReturn' | 'release'>;
-export type CreateSellForTax = Omit<SellForTax, 'id' | 'createdAt'>;
-export type CreateTaxCashReturn = Omit<TaxCashReturn, 'id' | 'createdAt'>;
-export type CreateRelease = Omit<Release, 'id' | 'createdAt'>;
+export type CreateReleaseEvent = Omit<ReleaseEvent, 'id' | 'createdAt'>;
 export type CreateSell = Omit<Sell, 'id' | 'createdAt'>;
 
 // FIFO allocation types
@@ -86,19 +75,15 @@ export interface GrantPool {
   remainingShares: number;
 }
 
-export interface VestAllocation {
-  vestId: string;
-  vestDate: string;
-  allocations: { grantId: string; grantName: string; shares: number }[];
-}
-
 export interface TaxLot {
-  releaseId: string;
-  releaseDate: string;
-  vestId: string;
+  releaseEventId: string;
+  grantAllocations: GrantAllocation[];
+  settlementDate: string;
+  vestDate: string;
   totalShares: number;
   remainingShares: number;
   costBasis: number;
+  sellToCoverGain: number;
 }
 
 export interface SellAllocation {
@@ -108,8 +93,8 @@ export interface SellAllocation {
   unitPrice: number;
   fee: number;
   lotAllocations: {
-    releaseId: string;
-    releaseDate: string;
+    releaseEventId: string;
+    settlementDate: string;
     shares: number;
     costBasis: number;
     gain: number;
@@ -120,7 +105,6 @@ export interface SellAllocation {
 
 export interface FifoResult {
   grantPools: GrantPool[];
-  vestAllocations: VestAllocation[];
   taxLots: TaxLot[];
   sellAllocations: SellAllocation[];
 }
@@ -139,16 +123,27 @@ export interface PortfolioOverview {
 }
 
 export interface TaxWithholdingSummary {
-  vestId: string;
+  releaseEventId: string;
+  settlementDate: string;
   vestDate: string;
-  sharesVested: number;
-  vestUnitPrice: number | null;
+  totalShares: number;
+  releasePrice: number;
   sharesSoldForTax: number;
-  taxProceeds: number;
-  sellForTaxFee: number;
+  taxSalePrice: number;
+  taxWithheld: number;
+  brokerFee: number;
   cashReturned: number;
-  netTaxPaid: number;
+  sellToCoverGain: number;
   effectiveTaxRate: number;
+}
+
+export interface SellToCoverGainSummary {
+  releaseEventId: string;
+  settlementDate: string;
+  sharesSold: number;
+  costBasis: number;
+  salePrice: number;
+  gain: number;
 }
 
 export interface PromisedVsFactual {

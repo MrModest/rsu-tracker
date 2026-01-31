@@ -4,8 +4,9 @@ import { GrantsSummary } from '@/components/insights/GrantsSummary';
 import { LotTracker } from '@/components/insights/LotTracker';
 import { CapitalGains } from '@/components/insights/CapitalGains';
 import { TaxWithholding } from '@/components/insights/TaxWithholding';
+import { SellToCoverGains } from '@/components/insights/SellToCoverGains';
 import { StocksVsCash } from '@/components/insights/StocksVsCash';
-import { usePortfolio, useLots, useCapitalGains, useTaxWithholding, usePromisedVsFactual } from '@/hooks/use-insights';
+import { usePortfolio, useLots, useCapitalGains, useTaxWithholding, useSellToCoverGains, usePromisedVsFactual } from '@/hooks/use-insights';
 import { useGrants } from '@/hooks/use-grants';
 import { useSettings } from '@/hooks/use-settings';
 
@@ -14,6 +15,7 @@ export function DashboardPage() {
   const { data: lots } = useLots();
   const { data: capitalGains } = useCapitalGains();
   const { data: taxWithholding } = useTaxWithholding();
+  const { data: sellToCoverGains } = useSellToCoverGains();
   const { data: promisedVsFactual } = usePromisedVsFactual();
   const { data: grants } = useGrants();
   const { data: settings } = useSettings();
@@ -35,6 +37,7 @@ export function DashboardPage() {
           <TabsTrigger value="lots">Your Shares</TabsTrigger>
           <TabsTrigger value="gains">Sell History</TabsTrigger>
           <TabsTrigger value="tax">Vesting Tax</TabsTrigger>
+          <TabsTrigger value="sell-to-cover">Sell-to-Cover</TabsTrigger>
           <TabsTrigger value="stocks-vs-cash">Stocks vs Cash</TabsTrigger>
         </TabsList>
         <TabsContent value="grants">
@@ -48,6 +51,9 @@ export function DashboardPage() {
         </TabsContent>
         <TabsContent value="tax">
           {taxWithholding && <TaxWithholding summaries={taxWithholding} currency={currency} />}
+        </TabsContent>
+        <TabsContent value="sell-to-cover">
+          {sellToCoverGains && <SellToCoverGains gains={sellToCoverGains} currency={currency} />}
         </TabsContent>
         <TabsContent value="stocks-vs-cash">
           {promisedVsFactual && <StocksVsCash data={promisedVsFactual} currency={currency} />}

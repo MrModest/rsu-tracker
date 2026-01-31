@@ -39,4 +39,6 @@
 - camelCase for variables, functions, methods
 - PascalCase for components, interfaces, types
 - kebab-case for file names (e.g., `use-grants.ts`, `sell-for-tax.ts`)
-- Route files named after entity (e.g., `grants.ts`, `sells.ts`)
+- Route files named after entity (e.g., `grants.ts`, `release-events.ts`, `sells.ts`)
+- Cost basis calculation: FMV at settlement date (30-day average XETRA closing price)
+- Sell-to-cover capital gains: (taxSalePrice - releasePrice) × sharesSoldForTax - brokerFee

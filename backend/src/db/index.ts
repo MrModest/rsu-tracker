@@ -26,42 +26,20 @@ sqlite.exec(`
     created_at TEXT NOT NULL
   );
 
-  CREATE TABLE IF NOT EXISTS vests (
+  CREATE TABLE IF NOT EXISTS release_events (
     id TEXT PRIMARY KEY,
-    date TEXT NOT NULL,
-    share_amount REAL NOT NULL,
-    unit_price REAL NOT NULL,
-    is_cliff INTEGER NOT NULL DEFAULT 0,
-    notes TEXT NOT NULL DEFAULT '',
-    created_at TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS sell_for_tax (
-    id TEXT PRIMARY KEY,
-    vest_id TEXT NOT NULL REFERENCES vests(id) ON DELETE CASCADE,
-    date TEXT NOT NULL,
-    share_amount REAL NOT NULL,
-    unit_price REAL NOT NULL,
-    fee REAL NOT NULL DEFAULT 0,
-    notes TEXT NOT NULL DEFAULT '',
-    created_at TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS tax_cash_returns (
-    id TEXT PRIMARY KEY,
-    vest_id TEXT NOT NULL REFERENCES vests(id) ON DELETE CASCADE,
-    date TEXT NOT NULL,
-    amount REAL NOT NULL,
-    notes TEXT NOT NULL DEFAULT '',
-    created_at TEXT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS releases (
-    id TEXT PRIMARY KEY,
-    vest_id TEXT NOT NULL REFERENCES vests(id) ON DELETE CASCADE,
-    date TEXT NOT NULL,
-    share_amount REAL NOT NULL,
-    unit_price REAL NOT NULL,
+    grant_allocations TEXT NOT NULL,
+    vest_date TEXT NOT NULL,
+    settlement_date TEXT NOT NULL,
+    total_shares REAL NOT NULL,
+    release_price REAL NOT NULL,
+    shares_sold_for_tax REAL NOT NULL,
+    tax_sale_price REAL NOT NULL,
+    tax_withheld REAL NOT NULL,
+    broker_fee REAL NOT NULL DEFAULT 0,
+    cash_returned REAL NOT NULL DEFAULT 0,
+    sell_to_cover_gain REAL NOT NULL,
+    net_shares_received REAL NOT NULL,
     notes TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL
   );

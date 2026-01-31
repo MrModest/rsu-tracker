@@ -31,18 +31,20 @@ Two independent projects side by side — no monorepo, no shared packages. Types
 - TypeScript strict mode, target ES2020
 
 ## Key Domain Concepts
-- **Event types**: grant → vest/cliff → sell_for_tax + tax_cash_return + release → sell
-- **Two-level FIFO**: (1) Vesting consumes from oldest grants first (2) Selling consumes from oldest release lots first
-- **FIFO allocations are computed on-the-fly**, not stored in the database
-- **vest_id FK** links sell_for_tax, tax_cash_return, and release back to their vest event
-- **Sells have no FK** — FIFO determines which release lots are consumed
+- **Event types**: grant → release_event (vesting + sell-to-cover) → sell
+- **Release event**: Atomic event matching broker report structure (vest date, settlement date, total shares, release price, sell-to-cover details)
+- **Two-level FIFO**: (1) Release events linked to grants via explicit FK (auto-split on creation) (2) Sells consume release events by settlementDate (oldest first)
+- **Cost basis**: releasePrice (FMV at settlement date, calculated as 30-day average XETRA closing price)
+- **Sell-to-cover is REQUIRED**: Tax withholding always happens, generates capital gain/loss if releasePrice ≠ taxSalePrice
+- **Grant linkage explicit**: Each release_event has grantId FK (required), system auto-splits releases across grants via FIFO
+- **Sells have no FK**: FIFO determines which release_event lots are consumed by settlementDate
 
 ## Backend Structure
 - `src/index.ts` — Hono app entry, registers all route modules
-- `src/db/schema.ts` — Drizzle schema for 7 tables: grants, vests, sell_for_tax, tax_cash_returns, releases, sells, settings
+- `src/db/schema.ts` — Drizzle schema for 3 tables: grants, release_events, sells, settings
 - `src/db/index.ts` — DB connection + auto-creates tables on import
 - `src/routes/` — CRUD routes per entity type + insights + settings + data (import/export)
-- `src/services/fifo.ts` — Two-level FIFO engine (single `computeFifo` function)
+- `src/services/fifo.ts` — Two-level FIFO engine (release events linked to grants via FK, sells consume release events by settlementDate)
 - `src/services/insights.ts` — Computed insight calculations
 - `src/types.ts` — Shared type definitions (interfaces + Zod-like create types)
 
@@ -50,10 +52,10 @@ Two independent projects side by side — no monorepo, no shared packages. Types
 - `src/App.tsx` — TanStack Router setup with routes: `/` (dashboard), `/activity`, `/settings`
 - `src/types.ts` — Type definitions (duplicated from backend)
 - `src/lib/api.ts` — Fetch wrapper (`request` helper + `api` object with all endpoints)
-- `src/hooks/` — TanStack Query hooks per entity type (useGrants, useVests, useSells, etc.)
+- `src/hooks/` — TanStack Query hooks per entity type (useGrants, useReleaseEvents, useSells, useInsights)
 - `src/pages/` — DashboardPage, ActivityPage, SettingsPage
-- `src/components/activity/` — Per-event-type form components + ActivityTimeline
-- `src/components/insights/` — Dashboard insight components (PortfolioSummary, GrantsSummary, LotTracker, CapitalGains, TaxWithholding)
+- `src/components/activity/` — Per-event-type form components (GrantForm, ReleaseEventForm, SellForm) + ActivityTimeline
+- `src/components/insights/` — Dashboard insight components (PortfolioSummary, GrantsSummary, LotTracker, CapitalGains, TaxWithholding, SellToCoverGains)
 - `src/components/layout/` — AppLayout, Sidebar
 - `src/components/ui/` — shadcn components
 - Path alias: `@/` maps to `./src/`

@@ -10,45 +10,25 @@ export interface Grant {
   createdAt: string;
 }
 
-export interface Vest {
-  id: string;
-  date: string;
-  shareAmount: number;
-  unitPrice: number | null;
-  isCliff: boolean;
-  notes: string;
-  createdAt: string;
-  sellForTax?: SellForTax | null;
-  taxCashReturn?: TaxCashReturn | null;
-  release?: Release | null;
+export interface GrantAllocation {
+  grantId: string;
+  shares: number;
 }
 
-export interface SellForTax {
+export interface ReleaseEvent {
   id: string;
-  vestId: string;
-  date: string;
-  shareAmount: number;
-  unitPrice: number;
-  fee: number;
-  notes: string;
-  createdAt: string;
-}
-
-export interface TaxCashReturn {
-  id: string;
-  vestId: string;
-  date: string;
-  amount: number;
-  notes: string;
-  createdAt: string;
-}
-
-export interface Release {
-  id: string;
-  vestId: string;
-  date: string;
-  shareAmount: number;
-  unitPrice: number;
+  grantAllocations: GrantAllocation[];
+  vestDate: string;
+  settlementDate: string;
+  totalShares: number;
+  releasePrice: number;
+  sharesSoldForTax: number;
+  taxSalePrice: number;
+  taxWithheld: number;
+  brokerFee: number;
+  cashReturned: number;
+  sellToCoverGain: number;
+  netSharesReceived: number;
   notes: string;
   createdAt: string;
 }
@@ -77,19 +57,15 @@ export interface GrantPool {
   remainingShares: number;
 }
 
-export interface VestAllocation {
-  vestId: string;
-  vestDate: string;
-  allocations: { grantId: string; grantName: string; shares: number }[];
-}
-
 export interface TaxLot {
-  releaseId: string;
-  releaseDate: string;
-  vestId: string;
+  releaseEventId: string;
+  grantAllocations: GrantAllocation[];
+  settlementDate: string;
+  vestDate: string;
   totalShares: number;
   remainingShares: number;
   costBasis: number;
+  sellToCoverGain: number;
 }
 
 export interface SellAllocation {
@@ -99,8 +75,8 @@ export interface SellAllocation {
   unitPrice: number;
   fee: number;
   lotAllocations: {
-    releaseId: string;
-    releaseDate: string;
+    releaseEventId: string;
+    settlementDate: string;
     shares: number;
     costBasis: number;
     gain: number;
@@ -111,7 +87,6 @@ export interface SellAllocation {
 
 export interface FifoResult {
   grantPools: GrantPool[];
-  vestAllocations: VestAllocation[];
   taxLots: TaxLot[];
   sellAllocations: SellAllocation[];
 }
@@ -129,16 +104,27 @@ export interface PortfolioOverview {
 }
 
 export interface TaxWithholdingSummary {
-  vestId: string;
+  releaseEventId: string;
+  settlementDate: string;
   vestDate: string;
-  sharesVested: number;
-  vestUnitPrice: number | null;
+  totalShares: number;
+  releasePrice: number;
   sharesSoldForTax: number;
-  taxProceeds: number;
-  sellForTaxFee: number;
+  taxSalePrice: number;
+  taxWithheld: number;
+  brokerFee: number;
   cashReturned: number;
-  netTaxPaid: number;
+  sellToCoverGain: number;
   effectiveTaxRate: number;
+}
+
+export interface SellToCoverGainSummary {
+  releaseEventId: string;
+  settlementDate: string;
+  sharesSold: number;
+  costBasis: number;
+  salePrice: number;
+  gain: number;
 }
 
 export interface PromisedVsFactual {

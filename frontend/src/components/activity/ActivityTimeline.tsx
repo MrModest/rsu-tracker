@@ -2,31 +2,22 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 import { Pencil, Trash2 } from 'lucide-react';
-import type { Grant, Vest, SellForTax, TaxCashReturn, Release, Sell } from '@/types';
+import type { Grant, ReleaseEvent, Sell } from '@/types';
 
 export type TimelineItem =
   | { type: 'grant'; data: Grant }
-  | { type: 'vest'; data: Vest }
-  | { type: 'sell_for_tax'; data: SellForTax }
-  | { type: 'tax_cash_return'; data: TaxCashReturn }
-  | { type: 'release'; data: Release }
+  | { type: 'release_event'; data: ReleaseEvent }
   | { type: 'sell'; data: Sell };
 
 const typeBadgeVariant: Record<string, 'default' | 'secondary' | 'outline' | 'destructive'> = {
   grant: 'default',
-  vest: 'secondary',
-  sell_for_tax: 'outline',
-  tax_cash_return: 'outline',
-  release: 'secondary',
+  release_event: 'secondary',
   sell: 'destructive',
 };
 
 const typeLabels: Record<string, string> = {
   grant: 'Grant',
-  vest: 'Vest',
-  sell_for_tax: 'Sell for Tax',
-  tax_cash_return: 'Tax Cash Return',
-  release: 'Release',
+  release_event: 'Release',
   sell: 'Sell',
 };
 
@@ -34,20 +25,17 @@ function getDetails(item: TimelineItem, currency: string): string {
   switch (item.type) {
     case 'grant':
       return `${formatNumber(item.data.shareAmount, 0)} shares @ ${formatCurrency(item.data.unitPrice, currency)} — "${item.data.name}"`;
-    case 'vest':
-      return `${formatNumber(item.data.shareAmount, 0)} shares${item.data.unitPrice != null ? ` @ ${formatCurrency(item.data.unitPrice, currency)}` : ''}${item.data.isCliff ? ' (cliff)' : ''}`;
-    case 'sell_for_tax':
-      return `${formatNumber(item.data.shareAmount, 0)} shares @ ${formatCurrency(item.data.unitPrice, currency)}${item.data.fee ? ` (fee: ${formatCurrency(item.data.fee, currency)})` : ''}`;
-    case 'tax_cash_return':
-      return `${formatCurrency(item.data.amount, currency)} returned`;
-    case 'release':
-      return `${formatNumber(item.data.shareAmount, 0)} shares @ ${formatCurrency(item.data.unitPrice, currency)} cost basis`;
+    case 'release_event':
+      return `${formatNumber(item.data.totalShares, 0)} shares vested @ ${formatCurrency(item.data.releasePrice, currency)} cost basis (${formatNumber(item.data.sharesSoldForTax, 0)} sold for tax @ ${formatCurrency(item.data.taxSalePrice, currency)}) → ${formatNumber(item.data.netSharesReceived, 0)} net`;
     case 'sell':
       return `${formatNumber(item.data.shareAmount, 0)} shares @ ${formatCurrency(item.data.unitPrice, currency)}${item.data.fee ? ` (fee: ${formatCurrency(item.data.fee, currency)})` : ''}`;
   }
 }
 
 function getDate(item: TimelineItem): string {
+  if (item.type === 'release_event') {
+    return item.data.settlementDate;
+  }
   return item.data.date;
 }
 

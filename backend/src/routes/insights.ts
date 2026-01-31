@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { computeFifo } from '../services/fifo.js';
-import { getPortfolioOverview, getTaxWithholdingSummaries, getPromisedVsFactual } from '../services/insights.js';
+import { getPortfolioOverview, getTaxWithholdingSummaries, getSellToCoverGains, getPromisedVsFactual } from '../services/insights.js';
 
 const app = new Hono();
 
@@ -26,6 +26,12 @@ app.get('/capital-gains', async (c) => {
 app.get('/tax-withholding', async (c) => {
   const summaries = await getTaxWithholdingSummaries();
   return c.json(summaries);
+});
+
+// GET /api/insights/sell-to-cover-gains
+app.get('/sell-to-cover-gains', async (c) => {
+  const gains = await getSellToCoverGains();
+  return c.json(gains);
 });
 
 // GET /api/insights/promised-vs-factual

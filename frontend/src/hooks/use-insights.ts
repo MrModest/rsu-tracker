@@ -17,6 +17,10 @@ export function useTaxWithholding() {
   return useQuery({ queryKey: ['insights', 'tax-withholding'], queryFn: api.getTaxWithholding });
 }
 
+export function useSellToCoverGains() {
+  return useQuery({ queryKey: ['insights', 'sell-to-cover-gains'], queryFn: api.getSellToCoverGains });
+}
+
 export function usePromisedVsFactual() {
   return useQuery({ queryKey: ['insights', 'promised-vs-factual'], queryFn: api.getPromisedVsFactual });
 }

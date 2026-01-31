@@ -1,7 +1,7 @@
 import { asc } from 'drizzle-orm';
 import { db } from '../db/index.js';
-import { grants, vests, releases, sells } from '../db/schema.js';
-import type { FifoResult, GrantPool, VestAllocation, TaxLot, SellAllocation } from '../types.js';
+import { grants, releaseEvents, sells } from '../db/schema.js';
+import type { FifoResult, GrantPool, TaxLot, SellAllocation } from '../types.js';
 
 export async function computeFifo(): Promise<FifoResult> {
   // 1. Load all grants sorted by date ASC
@@ -16,52 +16,41 @@ export async function computeFifo(): Promise<FifoResult> {
     remainingShares: g.shareAmount,
   }));
 
-  // 3. Load all vests sorted by date ASC
-  const allVests = await db.select().from(vests).orderBy(asc(vests.date));
+  // 3. Consume grants by existing release events
+  const allReleaseEvents = await db
+    .select()
+    .from(releaseEvents)
+    .orderBy(asc(releaseEvents.settlementDate));
 
-  // 4. For each vest, consume from grant pools (FIFO by grant date)
-  const vestAllocations: VestAllocation[] = [];
-  for (const vest of allVests) {
-    let remaining = vest.shareAmount;
-    const allocations: VestAllocation['allocations'] = [];
-
-    for (const pool of grantPools) {
-      if (remaining <= 0) break;
-      if (pool.remainingShares <= 0) continue;
-
-      const consumed = Math.min(remaining, pool.remainingShares);
-      pool.remainingShares -= consumed;
-      remaining -= consumed;
-      allocations.push({
-        grantId: pool.grantId,
-        grantName: pool.grantName,
-        shares: consumed,
-      });
+  for (const re of allReleaseEvents) {
+    const allocations = JSON.parse(re.grantAllocations);
+    for (const alloc of allocations) {
+      const pool = grantPools.find((p) => p.grantId === alloc.grantId);
+      if (pool) {
+        pool.remainingShares -= alloc.shares;
+      }
     }
-
-    vestAllocations.push({
-      vestId: vest.id,
-      vestDate: vest.date,
-      allocations,
-    });
   }
 
-  // 5. Load all releases sorted by date ASC → build tax lots
-  const allReleases = await db.select().from(releases).orderBy(asc(releases.date));
+  // 4. Build tax lots from release_events ordered by settlement date
+  const taxLots: TaxLot[] = allReleaseEvents.map((re) => {
+    const allocations = JSON.parse(re.grantAllocations);
+    return {
+      releaseEventId: re.id,
+      grantAllocations: allocations,
+      settlementDate: re.settlementDate,
+      vestDate: re.vestDate,
+      totalShares: re.netSharesReceived,
+      remainingShares: re.netSharesReceived,
+      costBasis: re.releasePrice,
+      sellToCoverGain: re.sellToCoverGain,
+    };
+  });
 
-  const taxLots: TaxLot[] = allReleases.map((r) => ({
-    releaseId: r.id,
-    releaseDate: r.date,
-    vestId: r.vestId,
-    totalShares: r.shareAmount,
-    remainingShares: r.shareAmount,
-    costBasis: r.unitPrice,
-  }));
-
-  // 6. Load all sells sorted by date ASC
+  // 5. Load all sells sorted by date ASC
   const allSells = await db.select().from(sells).orderBy(asc(sells.date));
 
-  // 7. For each sell, consume from lots (FIFO by release date)
+  // 6. For each sell, consume from lots (FIFO by settlement date)
   const sellAllocations: SellAllocation[] = [];
   for (const sell of allSells) {
     let remaining = sell.shareAmount;
@@ -79,8 +68,8 @@ export async function computeFifo(): Promise<FifoResult> {
       const gain = (sell.unitPrice * consumed) - (lot.costBasis * consumed) - proratedFee;
 
       lotAllocations.push({
-        releaseId: lot.releaseId,
-        releaseDate: lot.releaseDate,
+        releaseEventId: lot.releaseEventId,
+        settlementDate: lot.settlementDate,
         shares: consumed,
         costBasis: lot.costBasis,
         gain,
@@ -101,5 +90,5 @@ export async function computeFifo(): Promise<FifoResult> {
     });
   }
 
-  return { grantPools, vestAllocations, taxLots, sellAllocations };
+  return { grantPools, taxLots, sellAllocations };
 }
